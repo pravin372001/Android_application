@@ -2,12 +2,9 @@ package com.example.dessertpusher
 
 import android.os.Handler
 import android.os.Looper
-import android.support.v4.os.IResultReceiver.Default
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
 import timber.log.Timber
 
 class DessertTimer(lifecycle: Lifecycle): DefaultLifecycleObserver {
@@ -36,8 +33,7 @@ class DessertTimer(lifecycle: Lifecycle): DefaultLifecycleObserver {
         // Post the runnable to start the timer
         handler.postDelayed(runnable, 1000L)
     }
-
-
+    
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
         // Removes all pending posts of runnable from the handler's queue, effectively stopping the

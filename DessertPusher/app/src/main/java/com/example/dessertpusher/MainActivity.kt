@@ -10,11 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleObserver
+import com.example.dessertpusher.DessertTimer
 import com.example.dessertpusher.R
 import com.example.dessertpusher.databinding.ActivityMainBinding
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity(), LifecycleObserver {
+
 
     private var revenue = 0
     private var dessertsSold = 0
@@ -22,13 +24,6 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
     // Contains all the views
     private lateinit var binding: ActivityMainBinding
 
-    /** Dessert Data **/
-
-    /**
-     * Simple data class that represents a dessert. Includes the resource id integer associated with
-     * the image, the price it's sold for, and the startProductionAmount, which determines when
-     * the dessert starts to be produced.
-     */
     data class Dessert(val imageId: Int, val price: Int, val startProductionAmount: Int)
 
     // Create a list of all desserts, in order of when they start being produced
@@ -48,16 +43,24 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         Dessert(R.drawable.oreo, 6000, 20000)
     )
     private var currentDessert = allDesserts[0]
-
+    private lateinit var dessertTimer: DessertTimer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i("MainActivity", "onCreated called")
+        Timber.i( "onCreate Called")
         // Use Data Binding to get reference to the views
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.dessertButton.setOnClickListener {
             onDessertClicked()
         }
+
+        if(savedInstanceState!=null) {
+            revenue = savedInstanceState.getInt("revenue")
+            dessertsSold = savedInstanceState.getInt("dessertsSold")
+        }
+
+        dessertTimer = DessertTimer(this.lifecycle)
+
 
         // Set the TextViews to the right values
         binding.revenue = revenue
@@ -110,7 +113,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
      * Menu methods
      */
     private fun onShare() {
-        val shareIntent = ShareCompat.IntentBuilder.from(this)
+        val shareIntent = ShareCompat.IntentBuilder(this@MainActivity)
             .setText(getString(R.string.share_text, dessertsSold, revenue))
             .setType("text/plain")
             .intent
@@ -135,7 +138,35 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
     }
 
     override fun onStart() {
+        Timber.i( "onStart Called")
         super.onStart()
-        Timber.i("onStart Called")
+    }
+
+    override fun onResume() {
+        Timber.i( "onResume Called")
+        super.onResume()
+    }
+
+    override fun onPause() {
+        Timber.i( "onPause Called")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        Timber.i( "onStop Called")
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        Timber.i( "onDestroy Called")
+        super.onDestroy()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("revenue", revenue)
+        outState.putInt("dessertsSold", dessertsSold) // if the stored value is not a primitive type, it should implement Parcelable or Serializable
+        // if the bundle size is too large, i.e >100kb , it will throw a TransactionTooLargeException
+        Timber.i( "onSaveInstanceState Called")
     }
 }
