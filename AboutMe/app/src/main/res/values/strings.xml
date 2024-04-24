@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">About Me</string>
+    <string name="name">Jothipravin</string>
+    <string name="yellow_star">Yellow Star</string>
+    <string name="bio">Hey there! I\'m a passionate app developer with a keen interest in exploring the dynamic world of technology. \n\nCurrently, I\'m diving into the realm of Zoho as a trainee, eager to absorb all the knowledge and skills it has to offer. \n\nWhen I\'m not immersed in coding or learning new platforms, you can find me glued to the screen watching cricket matches. \n\nCricket isn\'t just a sport for me; it\'s a source of excitement, strategy, and camaraderie. \n\nWhether it\'s crafting innovative apps or cheering for my favorite team on the cricket field, I\'m always up for an exhilarating challenge.</string>
+    <string name="what_is_your_nick_name">What is your nick name</string>
+    <string name="done_button">Done</string>
+
+</resources>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Navigation Assignment</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="first_fragment">First Fragment</string>
+    <string name="next">Next</string>
+    <string name="second_fragment">Second Fragment\t</string>
+    <string name="thrid_fragment">Third Fragment</string>
+    <string name="back">Back</string>
+    <string name="back_button">Back</string>
+    <string name="enter_your_name">Enter Your Name</string>
+</resources>

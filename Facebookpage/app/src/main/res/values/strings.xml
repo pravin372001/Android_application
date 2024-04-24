@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Facebookpage</string>
+    <string name="top_bar">News Feed</string>
+    <string name="todo">TODO</string>
+    <string name="profile_name">Casey Song with Harrison Smith and 3 Others</string>
+    <string name="last_seen">24 Minutes ago</string>
+    <string name="description">Good food, good firends and a lot of laughs</string>
+    <string name="Likes">100 Likes  3 Comments\n</string>
+    <string name="like">Like\n</string>
+    <string name="Share">Share\n</string>
+    <string name="comment">Comment\n</string>
+    <string name="status">Status\n</string>
+    <string name="Photo">Photo\n</string>
+    <string name="Checkin" />
+    <string name="check_in">Check In</string>
+</resources>

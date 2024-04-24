@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#7F7F7F"
+    android:backgroundTint="#FFFFFF"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/top_bar"
+        android:layout_width="0dp"
+        android:layout_height="47dp"
+        android:background="#3B5998"
+        android:backgroundTint="#3b5998"
+        android:fontFamily="@font/roboto"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/top_bar"
+        android:textAlignment="textStart"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.36"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="25dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/todo"
+        android:outlineSpotShadowColor="#3B5997"
+        app:layout_constraintBottom_toBottomOf="@+id/top_bar"
+        app:layout_constraintEnd_toEndOf="@+id/top_bar"
+        app:layout_constraintHorizontal_bias="0.787"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/search" />
+
+    <ImageView
+        android:id="@+id/pepople_menu"
+        android:layout_width="25dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/top_bar"
+        app:layout_constraintEnd_toEndOf="@+id/top_bar"
+        app:layout_constraintHorizontal_bias="0.529"
+        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/people_poll" />
+
+    <View
+        android:id="@+id/menubar"
+        android:layout_width="413dp"
+        android:layout_height="65dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_bar"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/feed"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/menubar"
+        app:layout_constraintEnd_toStartOf="@+id/friends"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_bar"
+        app:srcCompat="@drawable/newspaper" />
+
+    <ImageView
+        android:id="@+id/friends"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/menubar"
+        app:layout_constraintEnd_toStartOf="@+id/comment"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/feed"
+        app:layout_constraintTop_toBottomOf="@+id/top_bar"
+        app:srcCompat="@drawable/users" />
+
+    <ImageView
+        android:id="@+id/comment"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/menubar"
+        app:layout_constraintEnd_toStartOf="@+id/world"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/friends"
+        app:layout_constraintTop_toBottomOf="@+id/top_bar"
+        app:srcCompat="@drawable/comment_alt_middle" />
+
+    <ImageView
+        android:id="@+id/world"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/menubar"
+        app:layout_constraintEnd_toStartOf="@+id/menu"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/comment"
+        app:layout_constraintTop_toBottomOf="@+id/top_bar"
+        app:srcCompat="@drawable/earth_americas" />
+
+    <ImageView
+        android:id="@+id/menu"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/menubar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/world"
+        app:layout_constraintTop_toBottomOf="@+id/top_bar"
+        app:srcCompat="@drawable/menu_burger" />
+
+    <View
+        android:id="@+id/feed_view"
+        android:layout_width="413dp"
+        android:layout_height="619dp"
+        android:background="#7F7F7F"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/menubar" />
+
+    <View
+        android:id="@+id/single_feed"
+        android:layout_width="373dp"
+        android:layout_height="487dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/menubar"
+        app:layout_constraintVertical_bias="0.189" />
+
+    <ImageView
+        android:id="@+id/profile"
+        android:layout_width="56dp"
+        android:layout_height="55dp"
+        app:layout_constraintBottom_toBottomOf="@+id/single_feed"
+        app:layout_constraintEnd_toEndOf="@+id/single_feed"
+        app:layout_constraintHorizontal_bias="0.066"
+        app:layout_constraintStart_toStartOf="@+id/single_feed"
+        app:layout_constraintTop_toTopOf="@+id/single_feed"
+        app:layout_constraintVertical_bias="0.034"
+        android:src="@drawable/profile" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="241dp"
+        android:layout_height="52dp"
+        android:text="@string/profile_name"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/single_feed"
+        app:layout_constraintEnd_toEndOf="@+id/single_feed"
+        app:layout_constraintHorizontal_bias="0.236"
+        app:layout_constraintStart_toEndOf="@+id/profile"
+        app:layout_constraintTop_toTopOf="@+id/single_feed"
+        app:layout_constraintVertical_bias="0.034" />
+
+    <TextView
+        android:id="@+id/last_seen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/last_seen"
+        app:layout_constraintBottom_toBottomOf="@+id/single_feed"
+        app:layout_constraintEnd_toEndOf="@+id/single_feed"
+        app:layout_constraintHorizontal_bias="0.065"
+        app:layout_constraintStart_toEndOf="@+id/profile"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/imageView11"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        app:layout_constraintBottom_toBottomOf="@+id/single_feed"
+        app:layout_constraintEnd_toEndOf="@+id/single_feed"
+        app:layout_constraintHorizontal_bias="0.176"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/single_feed"
+        app:layout_constraintVertical_bias="0.032"
+        app:srcCompat="@drawable/angle_small_down" />
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/description"
+        app:layout_constraintBottom_toBottomOf="@+id/single_feed"
+        app:layout_constraintEnd_toEndOf="@+id/single_feed"
+        app:layout_constraintHorizontal_bias="0.201"
+        app:layout_constraintStart_toStartOf="@+id/single_feed"
+        app:layout_constraintTop_toTopOf="@+id/single_feed"
+        app:layout_constraintVertical_bias="0.26" />
+
+    <ImageView
+        android:id="@+id/last_seen_image"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/single_feed"
+        app:layout_constraintEnd_toEndOf="@+id/single_feed"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/last_seen"
+        app:layout_constraintTop_toTopOf="@+id/single_feed"
+        app:layout_constraintVertical_bias="0.15"
+        app:srcCompat="@drawable/earth_americas" />
+
+    <ImageView
+        android:id="@+id/imageView13"
+        android:layout_width="367dp"
+        android:layout_height="247dp"
+        android:src="@drawable/friends"
+        app:layout_constraintBottom_toBottomOf="@+id/feed_view"
+        app:layout_constraintEnd_toEndOf="@+id/single_feed"
+        app:layout_constraintStart_toStartOf="@+id/single_feed"
+        app:layout_constraintTop_toTopOf="@+id/single_feed"
+        app:layout_constraintVertical_bias="0.426" />
+
+    <TextView
+        android:id="@+id/likes_and_comment"
+        android:layout_width="156dp"
+        android:layout_height="22dp"
+        android:text="@string/Likes"
+        app:layout_constraintBottom_toBottomOf="@+id/single_feed"
+        app:layout_constraintEnd_toEndOf="@+id/single_feed"
+        app:layout_constraintHorizontal_bias="0.032"
+        app:layout_constraintStart_toStartOf="@+id/imageView13"
+        app:layout_constraintTop_toTopOf="@+id/single_feed"
+        app:layout_constraintVertical_bias="0.888" />
+
+    <TextView
+        android:id="@+id/like"
+        style="@style/interactbuttons"
+        android:layout_width="117dp"
+        android:layout_height="39dp"
+        android:paddingLeft="24dp"
+        android:paddingTop="4dp"
+        android:text="@string/like"
+        app:layout_constraintBottom_toBottomOf="@+id/single_feed"
+        app:layout_constraintEnd_toEndOf="@+id/single_feed"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/single_feed"
+        app:layout_constraintTop_toTopOf="@+id/single_feed"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/comment_button"
+        style="@style/interactbuttons"
+        android:layout_width="145dp"
+        android:layout_height="39dp"
+        android:paddingLeft="24dp"
+        android:text="@string/comment"
+        app:layout_constraintBottom_toBottomOf="@+id/single_feed"
+        app:layout_constraintEnd_toEndOf="@+id/single_feed"
+        app:layout_constraintHorizontal_bias="0.517"
+        app:layout_constraintStart_toStartOf="@+id/single_feed"
+        app:layout_constraintTop_toTopOf="@+id/single_feed"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/share"
+        style="@style/interactbuttons"
+        android:layout_width="110dp"
+        android:layout_height="39dp"
+        android:text="@string/Share"
+        app:layout_constraintBottom_toBottomOf="@+id/single_feed"
+        app:layout_constraintEnd_toEndOf="@+id/single_feed"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/comment_button"
+        app:layout_constraintTop_toTopOf="@+id/single_feed"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/imageView15"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/like"
+        app:layout_constraintEnd_toEndOf="@+id/like"
+        app:layout_constraintHorizontal_bias="0.179"
+        app:layout_constraintStart_toStartOf="@+id/like"
+        app:layout_constraintTop_toTopOf="@+id/like"
+        app:layout_constraintVertical_bias="0.26999998"
+        app:srcCompat="@drawable/social_network" />
+
+    <ImageView
+        android:id="@+id/comment_icon"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/single_feed"
+        app:layout_constraintEnd_toEndOf="@+id/comment_button"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/comment_button"
+        app:layout_constraintTop_toTopOf="@+id/comment_button"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/comment_alt_middle" />
+
+    <ImageView
+        android:id="@+id/share_icon"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/share"
+        app:layout_constraintEnd_toEndOf="@+id/share"
+        app:layout_constraintHorizontal_bias="0.023"
+        app:layout_constraintStart_toEndOf="@+id/comment_button"
+        app:layout_constraintTop_toTopOf="@+id/share"
+        app:layout_constraintVertical_bias="0.333"
+        app:srcCompat="@drawable/share_square" />
+
+    <View
+        android:id="@+id/bottom"
+        android:layout_width="410dp"
+        android:layout_height="66dp"
+        android:background="#3B5997"
+        app:layout_constraintBottom_toBottomOf="@+id/feed_view"
+        app:layout_constraintEnd_toEndOf="@+id/feed_view"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="@+id/feed_view"
+        app:layout_constraintTop_toBottomOf="@+id/menubar"
+        app:layout_constraintVertical_bias="0.984" />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="84dp"
+        android:layout_height="41dp"
+        android:paddingTop="8dp"
+        android:text="@string/status"
+        android:textAlignment="textEnd"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@+id/photo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.071"
+        app:layout_constraintStart_toStartOf="@+id/bottom" />
+
+    <ImageView
+        android:id="@+id/status_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/status"
+        app:layout_constraintEnd_toEndOf="@+id/status"
+        app:layout_constraintHorizontal_bias="0.28"
+        app:layout_constraintStart_toStartOf="@+id/status"
+        app:layout_constraintTop_toTopOf="@+id/status"
+        app:layout_constraintVertical_bias="0.75"
+        app:srcCompat="@drawable/pencil" />
+
+    <TextView
+        android:id="@+id/photo"
+        android:layout_width="116dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="32dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="24dp"
+        android:text="@string/Photo"
+        android:textAlignment="textEnd"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="@+id/bottom"
+        app:layout_constraintTop_toTopOf="@+id/bottom"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/imageView19"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/photo"
+        app:layout_constraintEnd_toEndOf="@+id/photo"
+        app:layout_constraintHorizontal_bias="0.28"
+        app:layout_constraintStart_toStartOf="@+id/photo"
+        app:layout_constraintTop_toTopOf="@+id/photo"
+        app:layout_constraintVertical_bias="0.43"
+        app:srcCompat="@drawable/camera" />
+
+    <TextView
+        android:id="@+id/check_in"
+        android:layout_width="99dp"
+        android:layout_height="35dp"
+        android:paddingTop="8dp"
+        android:text="@string/check_in"
+        android:textAlignment="textEnd"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@+id/photo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.912"
+        app:layout_constraintStart_toStartOf="@+id/bottom" />
+
+    <ImageView
+        android:id="@+id/imageView20"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/check_in"
+        app:layout_constraintEnd_toEndOf="@+id/check_in"
+        app:layout_constraintHorizontal_bias="0.205"
+        app:layout_constraintStart_toStartOf="@+id/check_in"
+        app:layout_constraintTop_toTopOf="@+id/check_in"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/marker" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

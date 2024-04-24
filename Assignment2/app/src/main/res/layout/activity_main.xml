@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/one"
+        style="@style/new_button"
+        android:layout_marginTop="66dp"
+        android:layout_marginEnd="24dp"
+        android:text="@string/one"
+        app:layout_constraintEnd_toStartOf="@+id/two"
+        app:layout_constraintTop_toBottomOf="@+id/price" />
+
+    <TextView
+        android:id="@+id/zero"
+        style="@style/new_button"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="25dp"
+        android:text="@string/zero"
+        app:layout_constraintEnd_toStartOf="@+id/clear"
+        app:layout_constraintTop_toBottomOf="@+id/seven" />
+
+    <TextView
+        android:id="@+id/four"
+        style="@style/new_button"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:text="@string/four"
+        app:layout_constraintEnd_toStartOf="@+id/five"
+        app:layout_constraintTop_toBottomOf="@+id/one" />
+
+    <TextView
+        android:id="@+id/seven"
+        style="@style/new_button"
+        android:layout_marginTop="19dp"
+        android:layout_marginEnd="23dp"
+        android:text="@string/seven"
+        app:layout_constraintEnd_toStartOf="@+id/eight"
+        app:layout_constraintTop_toBottomOf="@+id/four" />
+
+    <TextView
+        android:id="@+id/three"
+        style="@style/new_button"
+        android:layout_marginEnd="42dp"
+        android:text="@string/three"
+        app:layout_constraintBaseline_toBaselineOf="@+id/two"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/two"
+        style="@style/new_button"
+        android:layout_marginEnd="24dp"
+        android:text="@string/two"
+        app:layout_constraintBaseline_toBaselineOf="@+id/one"
+        app:layout_constraintEnd_toStartOf="@+id/three" />
+
+    <TextView
+        android:id="@+id/five"
+        style="@style/new_button"
+        android:layout_marginEnd="24dp"
+        android:text="@string/five"
+        app:layout_constraintBaseline_toBaselineOf="@+id/six"
+        app:layout_constraintEnd_toStartOf="@+id/six" />
+
+    <TextView
+        android:id="@+id/six"
+        style="@style/new_button"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="40dp"
+        android:text="@string/six"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/three" />
+
+    <TextView
+        android:id="@+id/eight"
+        style="@style/new_button"
+        android:layout_marginEnd="22dp"
+        android:text="@string/eight"
+        app:layout_constraintBaseline_toBaselineOf="@+id/seven"
+        app:layout_constraintEnd_toStartOf="@+id/nine" />
+
+    <TextView
+        android:id="@+id/nine"
+        style="@style/new_button"
+        android:layout_marginEnd="42dp"
+        android:text="@string/nine"
+        app:layout_constraintBaseline_toBaselineOf="@+id/eight"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/clear"
+        style="@style/new_button"
+        android:layout_width="142dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="40dp"
+        android:text="@string/clear"
+        app:layout_constraintBaseline_toBaselineOf="@+id/zero"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/total"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.241"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.303" />
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="43dp"
+        android:layout_marginTop="86dp"
+        android:text="@string/twenty"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/price" />
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="43dp"
+        android:text="@string/ten"
+        app:layout_constraintBottom_toTopOf="@+id/textView20"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView17" />
+
+    <TextView
+        android:id="@+id/textView20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:text="@string/fiveprice"
+        app:layout_constraintBottom_toTopOf="@+id/textView21"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView18" />
+
+    <TextView
+        android:id="@+id/textView21"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:text="@string/oneprice"
+        app:layout_constraintBottom_toTopOf="@+id/textView22"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView20" />
+
+    <TextView
+        android:id="@+id/textView22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:text="@string/twentyfivecents"
+        app:layout_constraintBottom_toTopOf="@+id/textView23"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView21" />
+
+    <TextView
+        android:id="@+id/textView23"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:text="@string/tencents"
+        app:layout_constraintBottom_toTopOf="@+id/textView24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView22" />
+
+    <TextView
+        android:id="@+id/textView24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:text="@string/fivecents"
+        app:layout_constraintBottom_toTopOf="@+id/textView25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView23" />
+
+    <TextView
+        android:id="@+id/textView25"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="43dp"
+        android:layout_marginBottom="137dp"
+        android:text="@string/onecents"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
