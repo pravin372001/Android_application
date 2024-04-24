@@ -1,4 +1,5 @@
 package com.example.dessertpusher
+
 import android.os.Handler
 import android.os.Looper
 import android.support.v4.os.IResultReceiver.Default
@@ -8,7 +9,6 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import timber.log.Timber
-
 
 class DessertTimer(lifecycle: Lifecycle): DefaultLifecycleObserver {
 
