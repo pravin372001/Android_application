@@ -6,11 +6,12 @@
     <string name="last_seen">24 Minutes ago</string>
     <string name="description">Good food, good firends and a lot of laughs</string>
     <string name="Likes">100 Likes  3 Comments\n</string>
-    <string name="like">Like\n</string>
-    <string name="Share">Share\n</string>
-    <string name="comment">Comment\n</string>
-    <string name="status">Status\n</string>
-    <string name="Photo">Photo\n</string>
+    <string name="like">Like</string>
+    <string name="Share">Share</string>
+    <string name="comment">Comment</string>
+    <string name="status">Status</string>
+    <string name="Photo">Photo</string>
     <string name="Checkin" />
     <string name="check_in">Check In</string>
+    <string name="news_feed">News Feed</string>
 </resources>

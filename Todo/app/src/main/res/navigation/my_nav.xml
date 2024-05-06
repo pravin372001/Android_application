@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.todo.home.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_addTodoScreen"
+            app:destination="@id/addTodoScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/addTodoScreen"
+        android:name="com.example.todo.addtodo.AddTodoFragment"
+        android:label="fragment_add_todo_screen"
+        tools:layout="@layout/fragment_add_todo_screen" >
+        <action
+            android:id="@+id/action_addTodoScreen_to_listTodoFragment"
+            app:destination="@id/listTodoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listTodoFragment"
+        android:name="com.example.todo.list_todo.ListTodoFragment"
+        android:label="fragment_list_todo"
+        tools:layout="@layout/fragment_list_todo" >
+        <action
+            android:id="@+id/action_listTodoFragment_to_addTodoScreen"
+            app:destination="@id/addTodoScreen" />
+    </fragment>
+</navigation>

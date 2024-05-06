@@ -33,7 +33,7 @@ class DessertTimer(lifecycle: Lifecycle): DefaultLifecycleObserver {
         // Post the runnable to start the timer
         handler.postDelayed(runnable, 1000L)
     }
-    
+
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
         // Removes all pending posts of runnable from the handler's queue, effectively stopping the

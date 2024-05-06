@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.roomdatabaseassignment.home.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_enterDataFragment"
+            app:destination="@id/enterDataFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/displayFragment"
+        android:name="com.example.roomdatabaseassignment.display.DisplayFragment"
+        android:label="DisplayFragment"
+        tools:layout="@layout/fragment_display"/>
+    <fragment
+        android:id="@+id/enterDataFragment"
+        android:name="com.example.roomdatabaseassignment.get_data.EnterDataFragment"
+        android:label="EnterDataFragment"
+        tools:layout="@layout/fragment_enter_data">
+        <action
+            android:id="@+id/action_enterDataFragment_to_displayFragment"
+            app:destination="@id/displayFragment" />
+    </fragment>
+</navigation>
