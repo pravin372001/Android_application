@@ -49,7 +49,7 @@ class ThirukkuralViewModel(private val context: Context) : ViewModel(), TextToSp
         tts.shutdown()
     }
 
-    fun getKural(index: Int): String {
+    private fun getKural(index: Int): String {
         return kuralList[index-1]
     }
 
@@ -62,32 +62,32 @@ class ThirukkuralViewModel(private val context: Context) : ViewModel(), TextToSp
         _kural.value = getKural(index)
         val words = _kural.value?.split(" ")
         _kural1.value = words?.take(4)!!.joinToString(" ")
-        _kural2.value = words?.takeLast(4)!!.joinToString(" ")
+        _kural2.value = words?.takeLast(3)!!.joinToString(" ")
         Log.i("ThirukkuralViewModel", "index = ${kural.value}")
-        speakKurals()
+        speakKural(words.toString())
     }
 
-    private fun speakKurals() {
-        val kural1Value = kural1.value
-        val kural2Value = kural2.value
-
-        kural1Value?.let { kural ->
-            speakKural(kural)
-        }
-
-        // Delay before speaking the second kural
-        val delayMillis = 2500 // Adjust the delay time as needed
-        Handler().postDelayed({
-            kural2Value?.let { kural ->
-                speakKural(kural)
-            }
-        }, delayMillis.toLong())
-    }
+//    private fun speakKurals() {
+//        val kural1Value = kural1.value
+//        val kural2Value = kural2.value
+//
+//        kural1Value?.let { kural ->
+//            speakKural(kural)
+//        }
+//
+//        // Delay before speaking the second kural
+//        val delayMillis = 2500 // Adjust the delay time as needed
+//        Handler().postDelayed({
+//            kural2Value?.let { kural ->
+//                speakKural(kural)
+//            }
+//        }, delayMillis.toLong())
+//    }
     
 
     private fun setKural() {
         kuralList = mutableListOf(
-            "அகர முதல எழுத்தெல்லாம் ஆதி பகவன்  முதற்றே உலகு",
+            "அகர முதல எழுத்தெல்லாம் ஆதி பகவன் முதற்றே உலகு",
             "கற்றதனால் ஆய பயனென்கொல் வாலறிவன் நற்றாள் தொழாஅர் எனின்",
             "மலர்மிசை ஏகினான் மாணடி சேர்ந்தார் நிலமிசை நீடுவாழ் வார்",
             "வேண்டுதல் வேண்டாமை இலானடி சேர்ந்தார்க்கு யாண்டும் இடும்பை இல",
@@ -134,14 +134,14 @@ class ThirukkuralViewModel(private val context: Context) : ViewModel(), TextToSp
             "அன்பும் அறனும் உடைத்தாயின் இல்வாழ்க்கை பண்பும் பயனும் அது",
             "அறத்தாற்றின் இல்வாழ்க்கை ஆற்றின் புறத்தாற்றில் போஒய்ப் பெறுவ தெவன்",
             "இயல்பினான் இல்வாழ்க்கை வாழ்பவன் என்பான் முயல்வாருள் எல்லாம் தலை",
-            "ஆற்றின் ஒழுக் கி அறனிழுக்கா இல்வாழ் க்கை நோற்பாரின் நோன்மை உடைத்து",
+            "ஆற்றின் ஒழுக்கி அறனிழுக்கா இல்வாழ் க்கை நோற்பாரின் நோன்மை உடைத்து",
             "அறன் எனப் பட்டதே இல்வாழ்க்கை அஃதும் பிறன்பழிப்ப தில்லாயின் நன்று",
             "வையத்துள் வாழ்வாங்கு வாழ்பவன் வான்உநற்யும் தெய்வத்துள் வைக்கப் படும்",
             "மனைக்தக்க மாண்புடையள் ஆகித்தற் கொண்டான் வளத்தக்காள் வாழ்க்கைத் துணை",
             "மனைமாட்சி இல்லாள்கண் இல்லாயின் வாழ்க்கை எனைமாட்சித் தாயினும் இல்",
             "இல்லதென் இல்லவள் மாண்பானால் உள்ளதென் இல்லவள் மாணாக் கடை",
             "பெண்ணின் பெருந்தக்க யாவுள கற்பென்னும் திண்மைஉண் டாகப் பெறின்",
-            "தெய்வம் தொழாஅள் கொழுநன் தொழுதெழுவாள் பெய்யெனப் பெய்பு ம் மழை",
+            "தெய்வம் தொழாஅள் கொழுநன் தொழுதெழுவாள் பெய்யெனப் பெய்பும் மழை",
             "தற்காத்துத் தற்கொண்டாற் பேணித் தகைசான்ற சொற்காத்துச் சோர்விலாள் பெண்",
             "சிறைகாக்கும் காப்பெவன் செய்யும் மகளிர் நிறைகாக்கும் காப்பே தலை",
             "பெற்றாற் பெறின்பெறுவர் பெண்டிர் பெருஞ்சிறப்புப் புத்தேளிர் வாழும் உலகு",

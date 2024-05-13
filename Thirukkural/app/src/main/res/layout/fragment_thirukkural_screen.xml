@@ -14,73 +14,87 @@
     android:layout_height="match_parent"
     tools:context=".ThirukkuralScreen">
 
-    <EditText
-        android:id="@+id/kural_number"
-        android:layout_width="165dp"
-        android:layout_height="41dp"
-        android:ems="10"
-        android:hint="@string/_1_1330"
-        android:inputType="number"
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="450dp"
+        android:layout_height="370dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.479" />
+        app:layout_constraintVertical_bias="0.171"
+        app:srcCompat="@drawable/oolai" />
 
-    <TextView
-        android:id="@+id/kuralNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/enter_the_kural_number"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/kural_number"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textField"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="206dp"
+        android:layout_height="85dp"
+        android:hint="@string/enter_the_kural_number"
+        app:helperText="@string/_1_1330"
+        app:helperTextEnabled="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.958" />
+        app:layout_constraintVertical_bias="0.554">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/thirukural_number"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:ems="10"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/get_kural"
+        android:theme="@style/AppTheme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/kural_number"
-        app:layout_constraintVertical_bias="0.109" />
+        app:layout_constraintTop_toBottomOf="@+id/textField"
+        app:layout_constraintVertical_bias="0.09" />
 
     <TextView
         android:id="@+id/Kural"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#B27730"
         android:text="@{kuralViewModel.kural1}"
-        android:textAlignment="viewStart"
-        android:textSize="16sp"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        android:textSize="12sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/kural_number"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/textField"
+        app:layout_constraintEnd_toEndOf="@+id/imageView"
+        app:layout_constraintHorizontal_bias="0.532"
+        app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.674" />
+        app:layout_constraintVertical_bias="0.66999996"
+        tools:text="அகர முதல எழுத்தெல்லாம் ஆதி" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#B27730"
         android:text="@{kuralViewModel.kural2}"
-        android:textAlignment="viewStart"
-        android:textSize="16sp"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        android:textSize="12sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/kuralNumber"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/Kural"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/Kural"
         app:layout_constraintTop_toBottomOf="@+id/Kural"
-        app:layout_constraintVertical_bias="0.0" />
+        tools:text="பகவன்  முதற்றே உலகு" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 

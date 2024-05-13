@@ -1,5 +1,7 @@
 package com.example.thirukkural
 
+import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -16,8 +18,8 @@ import com.example.thirukkural.databinding.FragmentThirukkuralScreenBinding
 class ThirukkuralScreen : Fragment() {
 
     private lateinit var viewModel : ThirukkuralViewModel
-
     private lateinit var binding : FragmentThirukkuralScreenBinding
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -27,16 +29,36 @@ class ThirukkuralScreen : Fragment() {
 
         val factory = ThirukkuralViewModelFactory(requireContext())
         viewModel = ViewModelProvider(this, factory)[ThirukkuralViewModel::class.java]
-
+        val layout = binding.thirukkural
+        layout.setOnTouchListener(HideKeyboardTouchListener(requireContext()))
         binding.kuralViewModel = viewModel
         binding.lifecycleOwner = this
         binding.button.setOnClickListener {
-            var index = binding.kuralNumber.text.toString().toInt()
+            var index = binding.thirukuralNumber.text.toString()
             Log.i("ThirukkuralScreeen", "index = $index")
-            if(index in 1..1330){
-                viewModel.settKural(index)
+            if(index.isEmpty()){
+                Toast.makeText(activity, "Input is Blank..", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(activity, "Enter between 1 to 1330", Toast.LENGTH_SHORT).show()
+                val i = index.toInt()
+                Log.i("ThirukkuralScreeen", "index = $index")
+                if(i in 1..1330){
+                    val imageView = binding.imageView
+                    ObjectAnimator.ofFloat(imageView, "translationY", 200f, 0f).apply {
+                        duration = 1000
+                        start()
+                    }
+                    ObjectAnimator.ofFloat(binding.Kural, "translationY", 200f, 0f).apply {
+                        duration = 1000
+                        start()
+                    }
+                    ObjectAnimator.ofFloat(binding.textView, "translationY", 200f, 0f).apply {
+                        duration = 1000
+                        start()
+                    }
+                    viewModel.settKural(i)
+                } else {
+                    Toast.makeText(activity, "Enter between 1 to 1330", Toast.LENGTH_SHORT).show()
+                }
             }
         }
         return binding.root

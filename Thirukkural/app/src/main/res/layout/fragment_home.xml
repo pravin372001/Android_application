@@ -6,7 +6,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#FFFFFF"
         tools:context="com.example.thirukkural.HomeFragment">
+
         <TextView
             android:id="@+id/home_title"
             android:layout_width="wrap_content"
@@ -27,9 +29,12 @@
 
         <Button
             android:id="@+id/play_game_button"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/go"
+            app:icon="@drawable/right_arrow"
+            app:iconSize="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
@@ -41,6 +46,7 @@
             android:id="@+id/imageView4"
             android:layout_width="289dp"
             android:layout_height="271dp"
+            android:background="#FFFFFF"
             android:src="@drawable/modern_thiruvalluvar_removebg_preview"
             app:layout_constraintBottom_toTopOf="@+id/play_game_button"
             app:layout_constraintEnd_toEndOf="parent"

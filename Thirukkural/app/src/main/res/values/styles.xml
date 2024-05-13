@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <!-- Primary brand color for the app bar -->
+        <item name="colorPrimary">#5B7F8F</item>
+        <!-- Customize other theme attributes as needed -->
+    </style>
+
+    <style name="LightWithoutAppBar" parent="Theme.AppCompat.Light.NoActionBar">
+
+    </style>
+
+
+</resources>

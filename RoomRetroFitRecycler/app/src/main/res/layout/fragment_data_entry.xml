@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.example.roomretrofitrecycler.DataEntry">
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="200dp"
+            android:ems="10"
+            android:hint="@string/enter_the_name"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/get"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="140dp"
+            android:layout_marginTop="50dp"
+            android:text="@string/predict" />
+
+        <TextView
+            android:id="@+id/output"
+            android:layout_width="249dp"
+            android:layout_height="74dp"
+            android:layout_marginHorizontal="80dp"
+            android:layout_marginVertical="40dp"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/show"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="140dp"
+            android:layout_marginTop="150dp"
+            android:text="@string/show_history" />
+
+    </LinearLayout>
+
+</layout>

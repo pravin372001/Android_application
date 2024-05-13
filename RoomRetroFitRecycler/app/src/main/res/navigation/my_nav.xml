@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/dataEntry2">
+    <fragment
+        android:id="@+id/dataEntry2"
+        android:name="com.example.roomretrofitrecycler.DataEntry"
+        android:label="DataEntry"
+        tools:layout="@layout/fragment_data_entry">
+        <action
+            android:id="@+id/action_dataEntry2_to_historyList2"
+            app:destination="@id/historyList2" />
+    </fragment>
+    <fragment
+        android:id="@+id/historyList2"
+        android:name="com.example.roomretrofitrecycler.HistoryList"
+        android:label="fragment_history_list"
+        tools:layout="@layout/fragment_history_list" >
+        <action
+            android:id="@+id/action_historyList2_to_dataEntry2"
+            app:destination="@id/dataEntry2" />
+    </fragment>
+</navigation>
