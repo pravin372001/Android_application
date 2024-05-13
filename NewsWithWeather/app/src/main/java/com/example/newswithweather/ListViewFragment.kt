@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -19,6 +20,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.PermissionChecker
@@ -176,7 +178,7 @@ class ListViewFragment : Fragment(), CategoryClickListener {
         }
 
         binding.progressBar?.isVisible = true
-        binding.progressBar?.setProgress(2, true)
+        binding.progressBar?.setProgressCompat(2, true)
 
         Handler().postDelayed({
             newsList.observe(viewLifecycleOwner) { it ->
