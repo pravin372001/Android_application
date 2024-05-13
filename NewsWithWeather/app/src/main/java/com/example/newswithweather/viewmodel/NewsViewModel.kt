@@ -17,10 +17,8 @@ import kotlinx.coroutines.withContext
 
 class NewsViewModel(private val repository:NewsRepository): ViewModel() {
 
-    private val pageSize = 4
-    private var currentPage = 0
-    private var _newsListPage : LiveData<List<NewsModel>> = MutableLiveData<List<NewsModel>>()
-    val newsListPage: LiveData<List<NewsModel>> = _newsListPage
+//    private var _newsListPage : LiveData<List<NewsModel>> = MutableLiveData<List<NewsModel>>()
+//    val newsListPage: LiveData<List<NewsModel>> = _newsListPage
     fun fetchNews(category: String){
         val news = MutableLiveData<News>()
         viewModelScope.launch {
@@ -63,15 +61,6 @@ class NewsViewModel(private val repository:NewsRepository): ViewModel() {
         }
     }
 
-    fun loadNextPage(category: String) {
-        currentPage++
-        viewModelScope.launch {
-            val offset = (currentPage - 1) * pageSize
-            val nextPageData = repository.getPaginatedNews(offset, pageSize, category)
-            _newsListPage = nextPageData
-        }
-    }
-
     fun getNewsByCategory(category: String): LiveData<List<NewsModel>> {
         return repository.getNewsByCategory(category)
     }
@@ -83,6 +72,18 @@ class NewsViewModel(private val repository:NewsRepository): ViewModel() {
         viewModelScope.launch {
             repository.reset()
         }
+    }
+
+    fun filterNews(query: String?): LiveData<List<NewsModel>> {
+        return repository.filterNews(query)
+    }
+
+    fun fetchNews(page: Int, category: String): LiveData<List<NewsModel>> {
+        return repository.getPaginatedNews(page, PAGE_SIZE, category)
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 10
     }
 
     class NewsViewModelFactory(private val repository: NewsRepository):ViewModelProvider.Factory{

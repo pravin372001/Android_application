@@ -17,6 +17,7 @@ import com.example.newswithweather.model.news.News
 import com.squareup.picasso.Picasso
 
 class NewsAdapter(private val fragment:Fragment, private val newsList: List<NewsModel>) : RecyclerView.Adapter<NewsAdapter.ViewHolder>(){
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.news_card_recycler, parent, false)
         return NewsAdapter.ViewHolder(itemView)
@@ -36,6 +37,23 @@ class NewsAdapter(private val fragment:Fragment, private val newsList: List<News
     override fun getItemCount(): Int {
         return newsList.size
     }
+
+//    fun setItems(items: List<NewsModel>) {
+//        newsList.clear()
+//        newsList.addAll(items)
+//        notifyDataSetChanged()
+//    }
+//
+//    fun addItems(items: List<NewsModel>) {
+//        val startPosition = newsList.size
+//        newsList.addAll(items)
+//        notifyItemRangeInserted(startPosition, items.size)
+//    }
+//
+//    fun clearItems() {
+//        newsList.clear()
+//        notifyDataSetChanged()
+//    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.thumbnail)

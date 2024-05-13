@@ -30,11 +30,19 @@ class NewsRepository(context: Context) {
         return newsDao.getNewsByCategory(category)
     }
 
-    fun getPaginatedNews(offset: Int, pageSize: Int, category: String): LiveData<List<NewsModel>> {
+    fun getPaginatedNews(page: Int, pageSize: Int, category: String): LiveData<List<NewsModel>> {
+        val offset = (page - 1) * pageSize
         return newsDao.getPaginatedNews(offset, pageSize, category)
     }
 
     suspend fun reset() {
         newsDao.resetTable()
+    }
+
+    fun filterNews(query: String?): LiveData<List<NewsModel>> {
+        if (query.isNullOrEmpty()) {
+            return newsDao.getAllNews()
+        }
+        return newsDao.filterNews(query)
     }
 }

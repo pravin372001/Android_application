@@ -10,9 +10,8 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/horizontalRecyclerView"
-            android:layout_width="380dp"
-            android:layout_height="82dp"
-            android:layout_marginStart="31dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/verticalRecyclerView"
@@ -20,6 +19,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/category_recycler" />
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/verticalRecyclerView"
@@ -31,6 +31,16 @@
             app:layout_constraintTop_toBottomOf="@+id/horizontalRecyclerView"
             tools:listitem="@layout/news_card_recycler" />
 
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressBar"
+            android:layout_width="410dp"
+            android:layout_height="11dp"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="86dp" />
+
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
@@ -41,15 +51,8 @@
             android:text="29 C"
             app:icon="@drawable/cloudy_2932604"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <SearchView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="1dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:rippleColor="@color/light_blue_A400" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

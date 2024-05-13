@@ -2,10 +2,12 @@ package com.example.newswithweather
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,10 +16,14 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.PermissionChecker
 import androidx.core.content.PermissionChecker.checkSelfPermission
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -59,7 +65,7 @@ class ListViewFragment : Fragment(), CategoryClickListener {
         viewModel = ViewModelProvider(this,
             NewsViewModel.NewsViewModelFactory(NewsRepository(requireContext()))
         )[NewsViewModel::class.java]
-
+        setHasOptionsMenu(true);
         weatherViewModel = ViewModelProvider(this,
             WeatherViewModel.WeatherViewModelFactory(WeatherRepository(requireContext()))
         )[WeatherViewModel::class.java]
@@ -76,6 +82,7 @@ class ListViewFragment : Fragment(), CategoryClickListener {
         for(category in categoryList){
             viewModel.fetchNews(category)
         }
+
         setNewsAdapter("all")
         newsRecyclerView = binding.verticalRecyclerView
         newsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -100,22 +107,50 @@ class ListViewFragment : Fragment(), CategoryClickListener {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_menu, menu)
+        val searchItem = menu.findItem(R.id.app_bar_search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                filterData(query)
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Handle search query text changes
+                return false
+            }
+        })
+
+        searchView.setOnCloseListener {
+            // Clear the search query and show category content
+            filterData(null)
+            false
+        }
     }
 
-    private suspend fun resetTableSeq(){
-        viewModel.reset()
+    private fun filterData(query: String?) {
+        val filteredList = viewModel.filterNews(query)
+        filteredList.observe(viewLifecycleOwner, Observer{
+            newsRecyclerView.adapter = NewsAdapter(this, it)
+        })
     }
 
     @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.app_bar_search -> {
-                // Handle menu item click in this fragment
+                val searchItem = item
+                searchItem.expandActionView()
+                val searchView = searchItem.actionView as SearchView
+                searchView.requestFocus()
+                val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT)
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
+
 
 
     private fun formatTemperature(temperature: String): String {
@@ -129,22 +164,28 @@ class ListViewFragment : Fragment(), CategoryClickListener {
         return apiCatagoryList
     }
 
-    private fun setNewsAdapter(category: String){
-        var newsList:LiveData<List<NewsModel>> = MutableLiveData<List<NewsModel>>()
-        if(category == "all"){
-            newsList = viewModel.getAllNews()
-        } else {
-            newsList = viewModel.getNewsByCategory(category)
-        }
-        newsList.observe(viewLifecycleOwner){ it ->
-            newsRecyclerView.adapter = NewsAdapter(this, it)
+    private fun setNewsAdapter(category: String) {
+        var newsList: LiveData<List<NewsModel>> = MutableLiveData<List<NewsModel>>()
+        when (category) {
+            "all" -> {
+                newsList = viewModel.getAllNews()
+            }
+            else -> {
+                newsList = viewModel.getNewsByCategory(category)
+            }
         }
 
-//        viewModel.loadNextPage(category)
-//        viewModel.newsList.observe(viewLifecycleOwner, Observer{
-//            newsRecyclerView.adapter = NewsAdapter(this, it)
-//        })
+        binding.progressBar?.isVisible = true
+        binding.progressBar?.setProgress(2, true)
+
+        Handler().postDelayed({
+            newsList.observe(viewLifecycleOwner) { it ->
+                newsRecyclerView.adapter = NewsAdapter(this, it)
+                binding.progressBar?.isVisible = false // Hide progress bar after loading data
+            }
+        }, 2000)
     }
+
 
     override fun onCategoryClicked(category: String) {
         setNewsAdapter(category = category)
