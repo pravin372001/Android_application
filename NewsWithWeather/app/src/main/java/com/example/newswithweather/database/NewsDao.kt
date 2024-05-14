@@ -28,4 +28,7 @@ interface NewsDao {
     @Query("SELECT * FROM news_table WHERE title LIKE '%' || :query || '%' OR content LIKE '%' || :query || '%'")
     fun filterNews(query: String?) : LiveData<List<NewsModel>>
 
+    @Query("SELECT * FROM news_table LIMIT :pageSize OFFSET :page ")
+    fun getPaginatedAll(page: Int, pageSize: Int): LiveData<List<NewsModel>>
+
 }

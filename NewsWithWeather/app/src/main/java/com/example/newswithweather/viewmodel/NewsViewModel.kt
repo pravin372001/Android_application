@@ -17,8 +17,6 @@ import kotlinx.coroutines.withContext
 
 class NewsViewModel(private val repository:NewsRepository): ViewModel() {
 
-//    private var _newsListPage : LiveData<List<NewsModel>> = MutableLiveData<List<NewsModel>>()
-//    val newsListPage: LiveData<List<NewsModel>> = _newsListPage
     fun fetchNews(category: String){
         val news = MutableLiveData<News>()
         viewModelScope.launch {
@@ -68,22 +66,25 @@ class NewsViewModel(private val repository:NewsRepository): ViewModel() {
         return repository.getAllNews()
     }
 
-    suspend fun reset() {
-        viewModelScope.launch {
-            repository.reset()
-        }
-    }
 
     fun filterNews(query: String?): LiveData<List<NewsModel>> {
         return repository.filterNews(query)
     }
 
-    fun fetchNews(page: Int, category: String): LiveData<List<NewsModel>> {
-        return repository.getPaginatedNews(page, PAGE_SIZE, category)
-    }
+    private var currentPage = 1
+    private val pageSize = 4 // Number of items per page
 
-    companion object {
-        private const val PAGE_SIZE = 10
+    private val _newsListPage = MutableLiveData<List<NewsModel>>()
+    val newsListPage: LiveData<List<NewsModel>> = _newsListPage
+
+    fun fetchNews(page: Int = 1, category: String): LiveData<List<NewsModel>> {
+        var newsData: LiveData<List<NewsModel>> = MutableLiveData<List<NewsModel>>()
+        if(category == "all"){
+            newsData = repository.getPaginatedAll(page, pageSize)
+        } else {
+            newsData = repository.getPaginatedNews(page, pageSize, category)
+        }
+        return newsData
     }
 
     class NewsViewModelFactory(private val repository: NewsRepository):ViewModelProvider.Factory{

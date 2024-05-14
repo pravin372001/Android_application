@@ -54,6 +54,9 @@ class ListViewFragment : Fragment(), CategoryClickListener {
     private lateinit var weatherViewModel: WeatherViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val locationName = MutableLiveData<String>()
+    private lateinit var newsAdapter: NewsAdapter
+    private var currentPage = 1
+    private var currentCategory = "all"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -84,11 +87,43 @@ class ListViewFragment : Fragment(), CategoryClickListener {
         for(category in categoryList){
             viewModel.fetchNews(category)
         }
+        var newsList: LiveData<List<NewsModel>> = viewModel.getAllNews()
 
-        setNewsAdapter("all")
+
         newsRecyclerView = binding.verticalRecyclerView
         newsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         newsRecyclerView.setHasFixedSize(true)
+        newsAdapter = NewsAdapter(this, mutableListOf())
+//        newsRecyclerView.adapter = newsAdapter
+        newsList.observe(viewLifecycleOwner) {
+            newsAdapter = NewsAdapter(this, it as MutableList<NewsModel>)
+            newsRecyclerView.adapter = newsAdapter
+        }
+
+        // Initial fetch with all categories
+        fetchNews(currentCategory)
+
+        // Pagination listener
+        newsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                val totalItemCount = layoutManager.itemCount
+
+                if (lastVisibleItemPosition == totalItemCount - 1) {
+                    // Load next page when reaching the end
+                    currentPage++
+                    fetchNews(currentCategory)
+                }
+            }
+        })
+
+
+//        setNewsAdapter("all")
+//        newsRecyclerView = binding.verticalRecyclerView
+//        newsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+//        newsRecyclerView.setHasFixedSize(true)
         // Check and request location permissions
         if (requireContext().checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             requestLocation()
@@ -125,15 +160,17 @@ class ListViewFragment : Fragment(), CategoryClickListener {
 
         searchView.setOnCloseListener {
             // Clear the search query and show category content
-            filterData(null)
-            false
+            fetchNews(currentCategory)
+            true
         }
     }
 
     private fun filterData(query: String?) {
         val filteredList = viewModel.filterNews(query)
         filteredList.observe(viewLifecycleOwner, Observer{
-            newsRecyclerView.adapter = NewsAdapter(this, it)
+            val mutableFilteredList = it?.toMutableList() ?: mutableListOf()
+//            newsRecyclerView.adapter = NewsAdapter(this, mutableFilteredList)
+            newsAdapter.setNews(mutableFilteredList)
         })
     }
 
@@ -153,11 +190,10 @@ class ListViewFragment : Fragment(), CategoryClickListener {
         }
     }
 
-
-
     private fun formatTemperature(temperature: String): String {
         return "$temperature °C"
     }
+
     private fun getCategories(): List<String>{
         val apiCatagoryList: ArrayList<String> = arrayListOf("all","national", "business",
             "sports", "world",
@@ -166,32 +202,55 @@ class ListViewFragment : Fragment(), CategoryClickListener {
         return apiCatagoryList
     }
 
-    private fun setNewsAdapter(category: String) {
-        var newsList: LiveData<List<NewsModel>> = MutableLiveData<List<NewsModel>>()
-        when (category) {
-            "all" -> {
-                newsList = viewModel.getAllNews()
-            }
-            else -> {
-                newsList = viewModel.getNewsByCategory(category)
-            }
-        }
-
-        binding.progressBar?.isVisible = true
-        binding.progressBar?.setProgressCompat(2, true)
-
-        Handler().postDelayed({
-            newsList.observe(viewLifecycleOwner) { it ->
-                newsRecyclerView.adapter = NewsAdapter(this, it)
-                binding.progressBar?.isVisible = false // Hide progress bar after loading data
-            }
-        }, 2000)
-    }
-
+//    private fun setNewsAdapter(category: String) {
+//        var newsList: LiveData<List<NewsModel>> = MutableLiveData<List<NewsModel>>()
+//        when (category) {
+//            "all" -> {
+//                newsList = viewModel.getAllNews()
+//            }
+//            else -> {
+//                newsList = viewModel.getNewsByCategory(category)
+//            }
+//        }
+//
+//        binding.progressBar?.isVisible = true
+//        binding.progressBar?.setProgressCompat(2, true)
+//
+//        Handler().postDelayed({
+//            newsList.observe(viewLifecycleOwner) { it ->
+//                newsRecyclerView.adapter = NewsAdapter(this, it)
+//                binding.progressBar?.isVisible = false // Hide progress bar after loading data
+//            }
+//        }, 2000)
+//    }
 
     override fun onCategoryClicked(category: String) {
-        setNewsAdapter(category = category)
+        // Reset pagination when a new category is selected
+        currentPage = 1
+        currentCategory = category
+        Log.i("ListViewFragment -> onCategoryClicked", category)
+        fetchNews(category)
     }
+
+    private fun fetchNews(category: String) {
+        // Fetch news for the selected category and page
+        val newsList = viewModel.fetchNews(currentPage, category)
+        newsList.observe(viewLifecycleOwner) {
+           if (currentPage == 1){
+                // If it's the first page, set the fetched news to adapter
+                newsAdapter.setNews(it)
+            } else {
+                // If it's not the first page, add the fetched news to adapter
+                newsAdapter.addNews(it)
+            }
+            Log.i("ListViewFragment -> fetchNews", it.toString())
+        }
+    }
+
+
+//    override fun onCategoryClicked(category: String) {
+//        setNewsAdapter(category = category)
+//    }
 
     @SuppressLint("MissingPermission")
     private fun requestLocation() {
@@ -242,7 +301,7 @@ class ListViewFragment : Fragment(), CategoryClickListener {
         weatherViewModel.fetchWeatherData(location)
         weatherViewModel.weatherData.observe(viewLifecycleOwner, Observer {
             binding.fab.text = formatTemperature(it.data.values.temperature.toString())
-            Toast.makeText(requireContext(), "Temperature: ${it.data.values.temperature}", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(requireContext(), "Temperature: ${it.data.values.temperature}", Toast.LENGTH_SHORT).show()
         })
     }
 }
