@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/webView"
-        android:name="com.example.newswithweather.WebView"
+        android:name="com.example.newswithweather.fragment.WebView"
         android:label="fragment_web_view"
         tools:layout="@layout/fragment_web_view" >
         <argument
@@ -16,11 +16,19 @@
     </fragment>
     <fragment
         android:id="@+id/listViewFragment"
-        android:name="com.example.newswithweather.ListViewFragment"
+        android:name="com.example.newswithweather.fragment.ListViewFragment"
         android:label="fragment_list_view"
         tools:layout="@layout/fragment_list_view" >
         <action
             android:id="@+id/action_listViewFragment_to_webView"
             app:destination="@id/webView" />
+        <action
+            android:id="@+id/action_listViewFragment_to_dialogFragment"
+            app:destination="@id/dialogFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/dialogFragment"
+        android:name="com.example.newswithweather.DialogFragment"
+        android:label="fragment_dialog"
+        tools:layout="@layout/fragment_dialog" />
 </navigation>

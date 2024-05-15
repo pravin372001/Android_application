@@ -18,11 +18,12 @@ class WeatherRepository(context: Context) {
         weatherDao.insertWeather(weather)
     }
 
-    suspend fun getWeather(): LiveData<CurrentWeather> {
+    fun getWeather(): LiveData<CurrentWeather> {
         return weatherDao.getWeather()
     }
 
     suspend fun deleteWeather() {
         weatherDao.deleteWeather()
     }
+
 }

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#FEFEFE"
     android:theme="@style/LightWithoutAppBar"
-    tools:context=".SplashActivity">
+    tools:context=".activity.SplashActivity">
 
     <ImageView
         android:id="@+id/imageView2"

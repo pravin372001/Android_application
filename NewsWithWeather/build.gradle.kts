@@ -8,6 +8,7 @@ buildscript {
     repositories {
         google()
         gradlePluginPortal()
+        mavenCentral()
     }
     dependencies {
         val nav_version = "2.7.7"
