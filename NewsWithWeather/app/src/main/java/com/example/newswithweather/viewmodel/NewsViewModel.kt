@@ -100,7 +100,7 @@ class NewsViewModel(private val repository:NewsRepository): ViewModel() {
 
     private val pageSize = 4 // Number of items per page
 
-    private val _newsListPage = MutableLiveData<List<NewsModel>>()
+    private var _newsListPage :LiveData<List<NewsModel>> = MutableLiveData<List<NewsModel>>()
     val newsListPage: LiveData<List<NewsModel>> = _newsListPage
 
     fun fetchNews(page: Int = 1, category: String): LiveData<List<NewsModel>> {

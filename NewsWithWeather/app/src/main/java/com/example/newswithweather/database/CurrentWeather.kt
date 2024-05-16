@@ -15,4 +15,5 @@ data class CurrentWeather(
     val windSpeed: Double,
     val humidity: Int,
     val name: String,
+    val weatherCode: Int
     )

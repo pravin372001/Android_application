@@ -29,13 +29,14 @@ class NewsAdapter(private val fragment:Fragment, private val imageClickListener:
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = newsList[position]
-        Picasso.get().load(currentItem.imageUrl).into(holder.imageView)
+        Picasso.get().load(currentItem.imageUrl).error(R.drawable.image_broken_svgrepo_com).into(holder.imageView)
         holder.imageView.setOnClickListener {
             imageClickListener.onClick(currentItem.imageUrl)
         }
         holder.titleTextView.text = currentItem.title
         holder.descriptionTextView.text = currentItem.content
         holder.timeText.text = currentItem.time
+        holder.dateView.text = currentItem.date
         holder.readMore.setOnClickListener {
             val action = ListViewFragmentDirections.actionListViewFragmentToWebView(readMoreUrl = currentItem.readMoreUrl)
             fragment.findNavController().navigate(action)
@@ -77,5 +78,6 @@ class NewsAdapter(private val fragment:Fragment, private val imageClickListener:
         val timeText: TextView = itemView.findViewById(R.id.date_time)
         val readMore: Button = itemView.findViewById(R.id.materialButton_readmore)
         val share: Button = itemView.findViewById(R.id.share)
+        val dateView: TextView = itemView.findViewById(R.id.date)
     }
 }

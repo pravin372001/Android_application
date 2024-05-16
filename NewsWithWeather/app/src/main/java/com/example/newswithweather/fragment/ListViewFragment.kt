@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
@@ -60,6 +61,7 @@ class ListViewFragment : Fragment(), CategoryClickListener, ImageClickListener {
         viewModel = ViewModelProvider(this,
             NewsViewModel.NewsViewModelFactory(NewsRepository(requireContext()))
         )[NewsViewModel::class.java]
+
         Log.i("ListViewFragment -> isNetworkAvailable", isNetworkAvailable(requireContext()).toString())
         if(isNetworkAvailable(requireContext())){
 
@@ -74,6 +76,8 @@ class ListViewFragment : Fragment(), CategoryClickListener, ImageClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.app_name)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         // Inflate the layout for this fragment
@@ -123,12 +127,8 @@ class ListViewFragment : Fragment(), CategoryClickListener, ImageClickListener {
 
                 if (lastVisibleItemPosition == totalItemCount - 1) {
                     // Load next page when reaching the end
-                    binding.progressBar?.isGone = false
-                    Handler().postDelayed({
-                        currentPage++
-                        fetchNews(currentCategory)
-                        binding.progressBar?.isGone = true
-                    }, 2000)
+                    currentPage++
+                    fetchNews(currentCategory)
                 }
             }
         })
@@ -200,6 +200,15 @@ class ListViewFragment : Fragment(), CategoryClickListener, ImageClickListener {
                 val searchItem = item
                 searchItem.expandActionView()
                 val searchView = searchItem.actionView as SearchView
+                // Listen for focus change events on the SearchView
+                searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
+                    if (!hasFocus) {
+                        // Hide the keyboard when the SearchView loses focus
+                        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        imm.hideSoftInputFromWindow(searchView.windowToken, 0)
+                    }
+                }
+
                 searchView.requestFocus()
                 val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT)
@@ -208,6 +217,7 @@ class ListViewFragment : Fragment(), CategoryClickListener, ImageClickListener {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
 
     private fun formatTemperature(temperature: String): String {
         return "$temperature °C"
@@ -251,19 +261,24 @@ class ListViewFragment : Fragment(), CategoryClickListener, ImageClickListener {
 
     private fun fetchNews(category: String) {
         // Fetch news for the selected category and page
+        binding.progressBar?.isVisible = true
         val newsList = viewModel.fetchNews(currentPage, category)
-        newsList.observe(viewLifecycleOwner) {
-           if (currentPage == 1){
-                // If it's the first page, set the fetched news to adapter
-                newsAdapter.setNews(it)
-               Log.i("ListViewFragment -> fetchNews","set news adapter")
-            } else {
-                // If it's not the first page, add the fetched news to adapter
-                newsAdapter.addNews(it)
-               Log.i("ListViewFragment -> fetchNews","add news adapter")
+        Handler().postDelayed({
+            newsList.observe(viewLifecycleOwner) {
+                if (currentPage == 1){
+                    // If it's the first page, set the fetched news to adapter
+                    newsAdapter.setNews(it)
+                    Log.i("ListViewFragment -> fetchNews","set news adapter")
+                } else {
+                    // If it's not the first page, add the fetched news to adapter
+                    newsAdapter.addNews(it)
+                    Log.i("ListViewFragment -> fetchNews","add news adapter")
+                }
+                Log.i("ListViewFragment -> fetchNews", it.toString())
+                binding.progressBar?.isVisible = false // Hide progress bar after loading data
             }
-            Log.i("ListViewFragment -> fetchNews", it.toString())
-        }
+        }, 1000)
+
     }
 
 
@@ -324,10 +339,22 @@ class ListViewFragment : Fragment(), CategoryClickListener, ImageClickListener {
     }
 
     private fun getWeatherData(location: String){
-        weatherViewModel.fetchWeatherData(location)
-        weatherViewModel.weatherData.observe(viewLifecycleOwner, Observer {
-            binding.fab.text = formatTemperature(it.data.values.temperature.toString())
-//            Toast.makeText(requireContext(), "Temperature: ${it.data.values.temperature}", Toast.LENGTH_SHORT).show()
+        if(isNetworkAvailable(requireContext())){
+            weatherViewModel.fetchWeatherData(location)
+        }
+        val currentWeather = weatherViewModel.getWeather()
+        currentWeather.observe(viewLifecycleOwner, Observer { weather ->
+            if (weather != null) {
+                binding.fab.text = formatTemperature(weather.temperature.toString())
+            } else {
+                // Handle the null case, maybe show an error message or use a default value
+                binding.fab.text = "N/A" // Assume you have a default value in strings.xml
+                Log.e("ListViewFragment", "CurrentWeather is null")
+            }
         })
+//        weatherViewModel.weatherData.observe(viewLifecycleOwner, Observer {
+//            binding.fab.text = formatTemperature(it.data.values.temperature.toString())
+//            Toast.makeText(requireContext(), "Temperature: ${it.data.values.temperature}", Toast.LENGTH_SHORT).show()
+//        })
     }
 }

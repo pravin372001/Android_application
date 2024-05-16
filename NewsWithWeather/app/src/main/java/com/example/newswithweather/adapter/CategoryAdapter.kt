@@ -21,7 +21,7 @@ class CategoryAdapter(private val categories: List<String>, private val listener
 
     override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val currItem = categories[position]
-        holder.categoryName.text = currItem
+        holder.categoryName.text = currItem.capitalizeFirstLetter()
 
         // Update the background and text color based on selection state
         if (position == selectedPosition) {
@@ -38,6 +38,14 @@ class CategoryAdapter(private val categories: List<String>, private val listener
             notifyItemChanged(previousPosition)
             notifyItemChanged(selectedPosition)
             listener.onCategoryClicked(currItem)
+        }
+    }
+
+    fun String.capitalizeFirstLetter(): String {
+        return if (isNotEmpty()) {
+            this[0].toUpperCase() + substring(1)
+        } else {
+            this
         }
     }
 

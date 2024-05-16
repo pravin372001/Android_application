@@ -43,7 +43,8 @@ class WeatherViewModel(private val repository: WeatherRepository): ViewModel() {
             windDirection = weatherApiData.data.values.windDirection,
             windSpeed = weatherApiData.data.values.windSpeed,
             humidity = weatherApiData.data.values.humidity,
-            name = weatherApiData.location.name
+            name = weatherApiData.location.name,
+             weatherCode = weatherApiData.data.values.weatherCode
         )
         insertWeather(currentWeather)
     }
