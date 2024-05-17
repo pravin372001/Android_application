@@ -52,6 +52,7 @@ class CategoryAdapter(private val categories: List<String>, private val listener
     override fun getItemCount(): Int {
         return categories.size
     }
+
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val categoryName: TextView = itemView.findViewById(R.id.catergoryid)
         val cardView: CardView = itemView.findViewById(R.id.item_layout_category)
