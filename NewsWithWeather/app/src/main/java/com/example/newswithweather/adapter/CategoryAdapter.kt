@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.newswithweather.listener.CategoryClickListener
 import com.example.newswithweather.R
 
-class CategoryAdapter(private val categories: List<String>, private val listener: CategoryClickListener) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>(){
+class CategoryAdapter(private val categories: List<String>, private val listener: CategoryClickListener,
+                      private var selectedPosition: Int) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>(){
 
-    private var selectedPosition = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.category_recycler, parent, false)
         return  ViewHolder(itemView)
@@ -38,10 +38,11 @@ class CategoryAdapter(private val categories: List<String>, private val listener
             notifyItemChanged(previousPosition)
             notifyItemChanged(selectedPosition)
             listener.onCategoryClicked(currItem)
+            listener.onCategoryPosition(selectedPosition)
         }
     }
 
-    fun String.capitalizeFirstLetter(): String {
+    private fun String.capitalizeFirstLetter(): String {
         return if (isNotEmpty()) {
             this[0].toUpperCase() + substring(1)
         } else {

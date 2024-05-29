@@ -23,7 +23,7 @@
             android:id="@+id/verticalRecyclerView"
             android:layout_width="731dp"
             android:layout_height="306dp"
-            android:paddingLeft="200dp"
+            android:paddingLeft="90dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

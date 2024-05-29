@@ -21,6 +21,11 @@ class MainActivity : AppCompatActivity() {
 
         val appBarConfiguration = AppBarConfiguration(setOf(R.id.listViewFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        navController.addOnDestinationChangedListener { _, _, _ ->
+            supportActionBar?.title = "News App"
+        }
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

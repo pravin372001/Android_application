@@ -45,12 +45,11 @@ import java.util.Locale
 
 class ListViewFragment : Fragment(), CategoryClickListener, ImageClickListener {
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var newsRecyclerView: RecyclerView
     private lateinit var binding: FragmentListViewBinding
     private lateinit var viewModel: NewsViewModel
     private lateinit var weatherViewModel: WeatherViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var categoryAdapter: CategoryAdapter
     private val locationName = MutableLiveData<String>()
     private lateinit var newsAdapter: NewsAdapter
     private var currentCategory : String = String()
@@ -64,9 +63,11 @@ class ListViewFragment : Fragment(), CategoryClickListener, ImageClickListener {
         Log.i("ListViewFragment -> isNetworkAvailable", isNetworkAvailable(requireContext()).toString())
         if(isNetworkAvailable(requireContext())){
             viewModel.deleteNews()
-            for(category in getCategories()){
+            for(category in viewModel.getCategories()){
                 viewModel.fetchNews(category)
             }
+        } else {
+            viewModel.setDNInserted(true)
         }
     }
 
@@ -74,8 +75,6 @@ class ListViewFragment : Fragment(), CategoryClickListener, ImageClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.app_name)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         // Inflate the layout for this fragment
@@ -86,8 +85,9 @@ class ListViewFragment : Fragment(), CategoryClickListener, ImageClickListener {
             WeatherViewModel.WeatherViewModelFactory(WeatherRepository(requireContext()))
         )[WeatherViewModel::class.java]
 
-        val categoryList = getCategories()
-        val categoryAdapter = CategoryAdapter(categoryList, this)
+        val categoryList = viewModel.getCategories()
+        categoryAdapter = CategoryAdapter(categoryList, this, viewModel.getSelectPosition())
+
         binding.horizontalRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
@@ -145,6 +145,10 @@ class ListViewFragment : Fragment(), CategoryClickListener, ImageClickListener {
             })
         }
         return binding.root
+    }
+
+    override fun onCategoryPosition(position: Int) {
+        viewModel.setSelectPosition(position)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -213,13 +217,7 @@ class ListViewFragment : Fragment(), CategoryClickListener, ImageClickListener {
         return "$temperature °C"
     }
 
-    private fun getCategories(): List<String>{
-        val apiCatagoryList: ArrayList<String> = arrayListOf("all","national", "business",
-            "sports", "world",
-            "politics", "technology", "startup", "entertainment",
-            "miscellaneous", "hatke", "science", "automobile")
-        return apiCatagoryList
-    }
+
 
     override fun onCategoryClicked(category: String) {
         // Reset pagination when a new category is selected
@@ -295,7 +293,6 @@ class ListViewFragment : Fragment(), CategoryClickListener, ImageClickListener {
         val networkInfo = connectivityManager.activeNetworkInfo
         return networkInfo?.isConnectedOrConnecting ?: false
     }
-
 
     companion object {
         private const val REQUEST_LOCATION_PERMISSION = 123

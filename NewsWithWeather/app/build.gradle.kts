@@ -84,6 +84,8 @@ dependencies {
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
 
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
     implementation("com.google.android.gms:play-services-location:18.0.0")
 
     implementation ("com.squareup.picasso:picasso:2.71828")

@@ -36,7 +36,7 @@ class NewsAdapter(private val fragment:Fragment, private val imageClickListener:
         holder.titleTextView.text = currentItem.title
         holder.descriptionTextView.text = currentItem.content
         holder.timeText.text = currentItem.time
-        holder.dateView.text = currentItem.date
+        holder.dateView.text = currentItem.date.toString()
         holder.readMore.setOnClickListener {
             val action = ListViewFragmentDirections.actionListViewFragmentToWebView(readMoreUrl = currentItem.readMoreUrl)
             fragment.findNavController().navigate(action)
@@ -69,7 +69,6 @@ class NewsAdapter(private val fragment:Fragment, private val imageClickListener:
         newsList.addAll(news)
         notifyDataSetChanged()
     }
-
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.thumbnail)

@@ -22,7 +22,6 @@ class WebView : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.app_name)
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

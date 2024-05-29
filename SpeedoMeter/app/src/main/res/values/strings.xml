@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SpeedometerApp</string>
+    <string name="gauge_background">Gauge Background</string>
+    <string name="speed_0_km_h">Speed: 0 km/h</string>
+</resources>

@@ -19,6 +19,15 @@ class NewsRepository(context: Context) {
         newsDao.insertNews(news)
     }
 
+    suspend fun insertNewNews(newsList: List<NewsModel>) {
+        for (news in newsList) {
+            val existingNews = newsDao.getNewsByDateTime(news.date, news.time)
+            if (existingNews == null || existingNews.title != news.title) {
+                newsDao.insertNews(news)
+            }
+        }
+    }
+
     fun getAllNews(): LiveData<List<NewsModel>>{
         return newsDao.getAllNews()
     }
@@ -31,15 +40,6 @@ class NewsRepository(context: Context) {
     fun getNewsByCategory(category: String): LiveData<List<NewsModel>> {
         return newsDao.getNewsByCategory(category)
     }
-
-//    fun getPaginatedNews(page: Int, pageSize: Int, category: String): LiveData<List<NewsModel>> {
-//        val offset = (page - 1) * pageSize
-//        Log.i("NewsRepository -> getPaginatedNews", "offset = $offset page = $page pageSize = $pageSize")
-//        val temp = newsDao.getPaginatedNews(offset, pageSize, category)
-////        val temp = newsDao.getAllNews()
-//        Log.i("NewsRepository -> getPaginatedNews", temp.value.toString())
-//        return temp
-//    }
 
     fun getPaginatedNews(page: Int, pageSize: Int, category: String): LiveData<List<NewsModel>> {
         val offset = (page - 1) * pageSize

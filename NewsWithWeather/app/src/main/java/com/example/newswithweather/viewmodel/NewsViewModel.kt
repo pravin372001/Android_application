@@ -9,7 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.example.newswithweather.database.Converters
 import com.example.newswithweather.database.NewsModel
+import com.example.newswithweather.model.news.Data
 import com.example.newswithweather.model.news.News
 import com.example.newswithweather.repository.NewsRepository
 import com.example.newswithweather.service.NewsApi
@@ -20,6 +22,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class NewsViewModel(private val repository:NewsRepository): ViewModel() {
 
@@ -28,15 +33,14 @@ class NewsViewModel(private val repository:NewsRepository): ViewModel() {
     // Define a MutableLiveData to observe deletion progress
     private val deletionInProgressLiveData = MutableLiveData<Boolean>()
 
+    private var selectPosition = 0
+
     private val _newsListPage = MutableLiveData<List<NewsModel>>()
     val newsListPage: LiveData<List<NewsModel>> get() = _newsListPage
 
     private val _newsListTemp = MutableLiveData<MutableList<NewsModel>>(mutableListOf())
-    val newsListTemp: LiveData<MutableList<NewsModel>> = _newsListTemp
-
 
     private val _newsList = MutableLiveData<MutableList<NewsModel>>()
-    val newsList: LiveData<MutableList<NewsModel>> = _newsList
 
     private val pageSize = 4 // Number of items per page
     private var currentPage = 1
@@ -53,6 +57,18 @@ class NewsViewModel(private val repository:NewsRepository): ViewModel() {
         fetchNews()
     }
 
+    fun setSelectPosition(position: Int) {
+        selectPosition = position
+    }
+
+    fun getSelectPosition(): Int{
+        return selectPosition
+    }
+
+    fun setDNInserted(value: Boolean) {
+        isDbDataInserted.value = value
+    }
+
     fun incrementPage() {
         currentPage++
         fetchNews()
@@ -63,33 +79,48 @@ class NewsViewModel(private val repository:NewsRepository): ViewModel() {
         _newsListTemp.value = mutableListOf()  // Reset the news list when the category changes
     }
 
-    fun fetchNews(category: String){
-        val news = MutableLiveData<News>()
+    fun getCategories(): List<String>{
+        val apiCatagoryList: ArrayList<String> = arrayListOf("all","national", "business",
+            "sports", "world",
+            "politics", "technology", "startup", "entertainment",
+            "miscellaneous", "hatke", "science", "automobile")
+        return apiCatagoryList
+    }
+
+    fun fetchNews(category: String) {
         viewModelScope.launch {
             try {
                 isDbDataInserted.value = false
-                val newsData = withContext(Dispatchers.IO){
+                val newsData = withContext(Dispatchers.IO) {
                     NewsApi.retrofitService.getNews(category)
                 }
-                Log.i("NewsViewModel - fetchNews", "${newsData}")
-                news.value = newsData
-                formatNews(news)
+                Log.i("NewsViewModel - fetchNews", "$newsData")
+                formatNews(newsData.data, newsData.category, newsData.success)
                 isDbDataInserted.value = true
-            } catch (e:Exception){
+            } catch (e: Exception) {
                 Log.i("NewsViewModel - Error", "${e.stackTrace}")
             }
         }
     }
 
-    private fun formatNews(news : MutableLiveData<News>){
-        for(i in 0 until news.value!!.data.size){
-            val newsModel = NewsModel(category = news.value!!.category, author =  news.value!!.data[i].author, content =  news.value!!.data[i].content, date =  news.value!!.data[i].date, id =  news.value!!.data[i].id
-                , imageUrl =  news.value!!.data[i].imageUrl, readMoreUrl =  news.value!!.data[i].readMoreUrl, time =  news.value!!.data[i].time,title = news.value!!.data[i].title,url = news.value!!.data[i].url,
-                success = news.value!!.success
+    private fun formatNews(newsList: List<Data>, category: String, success: Boolean) {
+        val newsModels = newsList.map { news ->
+            NewsModel(
+                category = category,
+                author = news.author,
+                content = news.content,
+                date = news.date,
+                id = news.id,
+                imageUrl = news.imageUrl,
+                readMoreUrl = news.readMoreUrl,
+                time = news.time,
+                title = news.title,
+                url = news.url,
+                success = success
             )
-            _newsList.value?.set(i, newsModel)
-            Log.i("NewsViewModel", "${newsModel}")
-            insertNews(newsModel)
+        }
+        viewModelScope.launch {
+            repository.insertNewNews(newsModels)
         }
     }
 
@@ -141,6 +172,29 @@ class NewsViewModel(private val repository:NewsRepository): ViewModel() {
                 _newsListPage.postValue(emptyList())
             }
         }
+    }
+
+    private fun sortNewsByDateAndTime(newsList: List<NewsModel>): List<NewsModel> {
+        val dateFormat = SimpleDateFormat("EEEE, dd MMM, yyyy hh:mm a", Locale.getDefault())
+        val comparator = Comparator<NewsModel> { news1, news2 ->
+            try {
+                // Parse the date strings into Date objects
+                val date1 = dateFormat.parse("${news1.date} ${news1.time}")
+                val date2 = dateFormat.parse("${news2.date} ${news2.time}")
+                Log.i("NewsViewModel -> Comparator", "date1 = $date1 date2 = $date2")
+                // Compare the Date objects
+                date2.compareTo(date1) // Reverse order to sort from newest to oldest
+            } catch (e: ParseException) {
+                e.printStackTrace()
+                0 // Return 0 in case of parsing error, maintaining original order
+            }
+        }
+
+        // Sort the newsList using the comparator
+        val sortedList = ArrayList(newsList)
+        sortedList.sortWith(comparator)
+
+        return sortedList
     }
 
     private fun appendNews(newsList: List<NewsModel>) {
