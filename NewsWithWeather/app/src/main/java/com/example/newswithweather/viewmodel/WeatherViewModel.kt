@@ -23,14 +23,40 @@ class WeatherViewModel(private val repository: WeatherRepository): ViewModel() {
         viewModelScope.launch {
             try {
                 val weatherApiData = withContext(Dispatchers.IO){
-                    WeatherApi.retrofitService.getWeather(location, "8JcF1e3mYiT7jsKa8FO5Ni5rlNEDPAdP")
+                    WeatherApi.retrofitService.getWeather(location, "DnYpJuZR6xWiQUzC0fSInGc1Y7sVcH3E")
                 }
                 Log.i("WeatherViewModel", "Weather data: $weatherData")
                 _weatherData.value = weatherApiData
+                formatWeather(weatherApiData)
             } catch (e: Exception){
                 Log.e("WeatherViewModel", "Error fetching weather data: ${e.message}")
             }
         }
+    }
+
+    private fun formatWeather(weatherApiData: Weather) {
+         val currentWeather = CurrentWeather(
+            time = weatherApiData.data.time,
+            temperature = weatherApiData.data.values.temperature,
+            uvIndex = weatherApiData.data.values.uvIndex,
+            visibility = weatherApiData.data.values.visibility,
+            windDirection = weatherApiData.data.values.windDirection,
+            windSpeed = weatherApiData.data.values.windSpeed,
+            humidity = weatherApiData.data.values.humidity,
+            name = weatherApiData.location.name,
+             weatherCode = weatherApiData.data.values.weatherCode
+        )
+        insertWeather(currentWeather)
+    }
+
+    private fun insertWeather(currentWeather: CurrentWeather) {
+        viewModelScope.launch {
+            repository.insert(currentWeather)
+        }
+    }
+
+    fun getWeather(): LiveData<CurrentWeather> {
+        return repository.getWeather()
     }
 
     class WeatherViewModelFactory(private val weatherRepository: WeatherRepository): ViewModelProvider.Factory{

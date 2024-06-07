@@ -28,4 +28,17 @@ interface NewsDao {
     @Query("SELECT * FROM news_table WHERE title LIKE '%' || :query || '%' OR content LIKE '%' || :query || '%'")
     fun filterNews(query: String?) : LiveData<List<NewsModel>>
 
+    @Query("""
+            SELECT * FROM news_table
+            ORDER BY
+            date DESC,
+        time DESC
+                LIMIT :pageSize OFFSET :page
+        """)
+    fun getPaginatedAll(page: Int, pageSize: Int): LiveData<List<NewsModel>>
+
+
+    @Query("SELECT * FROM news_table WHERE date = :date AND time = :time LIMIT 1")
+    suspend fun getNewsByDateTime(date: String, time: String): NewsModel?
+
 }

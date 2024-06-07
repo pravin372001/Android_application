@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">JetpackNews</string>
+    <string name="title">12-yr-old Indian-American boy wins National Spelling Bee contest in US</string>
+    <string name="description">A 12-year-old Indian-American seventh-grader from Florida, Bruhat Soma, won the Scripps National Spelling Bee after he spelt 29 words correctly in 90 seconds in a tiebreaker. Launched in 1925, the Scripps National Spelling Bee is the US\' largest and longest-running educational programme. He had got the 163rd place in the competition in 2022 and 74th in 2023</string>
+    <string name="date">Friday, 31 May, 2024  11:19 am</string>
+    <string name="bottom_news">News</string>
+    <string name="bottom_weather">Weather</string>
+    <string name="placeholder_search">Search\n</string>
+    <string name="search_placeholder">search</string>
+</resources>

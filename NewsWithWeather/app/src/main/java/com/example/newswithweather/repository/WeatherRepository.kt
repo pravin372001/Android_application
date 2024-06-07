@@ -6,11 +6,11 @@ import com.example.newswithweather.database.CurrentWeather
 import com.example.newswithweather.database.NewsDatabase
 import com.example.newswithweather.database.WeatherDao
 
-class WeatherRepository(contenxt: Context) {
+class WeatherRepository(context: Context) {
     private val weatherDao: WeatherDao
 
     init {
-        val database = NewsDatabase.getDatabase(contenxt)
+        val database = NewsDatabase.getDatabase(context)
         weatherDao = database.weatherDao()
     }
 
@@ -18,14 +18,12 @@ class WeatherRepository(contenxt: Context) {
         weatherDao.insertWeather(weather)
     }
 
-    suspend fun getWeather(): LiveData<CurrentWeather> {
+    fun getWeather(): LiveData<CurrentWeather> {
         return weatherDao.getWeather()
     }
 
     suspend fun deleteWeather() {
         weatherDao.deleteWeather()
     }
-
-
 
 }
