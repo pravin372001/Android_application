@@ -33,7 +33,6 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
 
     fun stopTimer() {
         getApplication<Application>().stopService(Intent(getApplication(), TimerService::class.java))
-        _time.value = "00:00:00"
     }
 
     override fun onCleared() {

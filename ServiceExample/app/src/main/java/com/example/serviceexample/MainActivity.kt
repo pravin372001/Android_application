@@ -10,12 +10,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.serviceexample.ui.theme.ServiceExampleTheme
 
 class MainActivity : ComponentActivity() {
+    private val PERMISSION_REQUEST_CODE = 123
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(android.Manifest.permission.FOREGROUND_SERVICE,
+                android.Manifest.permission.POST_NOTIFICATIONS),
+            PERMISSION_REQUEST_CODE
+        )
         setContent {
             ServiceExampleTheme {
                 TimerScreen()

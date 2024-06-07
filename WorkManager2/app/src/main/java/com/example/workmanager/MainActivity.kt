@@ -24,27 +24,25 @@ import coil.compose.rememberImagePainter
 
 class MainActivity : ComponentActivity() {
     private val PERMISSION_REQUEST_CODE = 123
+    private val permissions = arrayOf(
+        android.Manifest.permission.FOREGROUND_SERVICE,
+        android.Manifest.permission.POST_NOTIFICATIONS
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         NotificationUtils.createNotificationChannel(this)
 
         // Check and request foreground service permission if needed
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && ContextCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.FOREGROUND_SERVICE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(android.Manifest.permission.FOREGROUND_SERVICE),
-                PERMISSION_REQUEST_CODE
-            )
-        } else {
-            // Permission already granted or not needed, continue with app initialization
-            setContent {
-                ImageCompressApp(intent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (permissions.any { ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED }) {
+                ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE)
             }
         }
+        // Permission already granted or not needed, continue with app initialization
+        setContent {
+            ImageCompressApp(intent)
+        }
+
     }
 
     override fun onRequestPermissionsResult(

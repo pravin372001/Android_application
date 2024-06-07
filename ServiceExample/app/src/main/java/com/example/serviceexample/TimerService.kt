@@ -1,5 +1,3 @@
-// File: app/src/main/java/com/example/serviceexample/TimerService.kt
-
 package com.example.serviceexample
 
 import android.app.NotificationChannel
@@ -81,8 +79,8 @@ class TimerService : Service() {
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Timer Service")
             .setContentText(time)
-            .setSmallIcon(R.drawable.timer)
-            .addAction(R.drawable.stop_button, "Stop", stopPendingIntent)
+            .setSmallIcon(R.drawable.timer) // Use a valid drawable resource
+            .addAction(R.drawable.stop_button, "Stop", stopPendingIntent) // Use a valid drawable resource
             .setOngoing(true)
             .build()
 
@@ -94,7 +92,7 @@ class TimerService : Service() {
             val channel = NotificationChannel(
                 CHANNEL_ID,
                 "Timer Service Channel",
-                NotificationManager.IMPORTANCE_HIGH
+                NotificationManager.IMPORTANCE_DEFAULT
             )
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel)

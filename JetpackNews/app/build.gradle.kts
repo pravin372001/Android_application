@@ -6,17 +6,20 @@ plugins {
 }
 
 android {
-    namespace = "com.example.newswithweather"
+    namespace = "com.example.jetpacknews"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.newswithweather"
-        minSdk = 23
+        applicationId = "com.example.jetpacknews"
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
 
     buildTypes {
@@ -35,26 +38,40 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    dataBinding{
-        enable = true
-    }
     buildFeatures {
-        viewBinding = true
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.1"
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
     }
 }
 
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    implementation(libs.androidx.activity)
-    implementation(libs.androidx.constraintlayout)
-    implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
+
     implementation("com.google.code.gson:gson:2.9.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.7.1")
@@ -66,8 +83,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
 
-    val lottieVersion = "3.4.0"
-    implementation("com.airbnb.android:lottie:$lottieVersion")
 
     val room_version = "2.6.1"
 
@@ -76,8 +91,6 @@ dependencies {
 
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
-    implementation("com.github.bumptech.glide:glide:4.11.0")
-    kapt("com.github.bumptech.glide:compiler:4.11.0")
 
 
     // To use Kotlin annotation processing tool (kapt)
@@ -90,5 +103,7 @@ dependencies {
 
     implementation ("com.squareup.picasso:picasso:2.71828")
 
+    implementation ("androidx.compose.material:material-icons-extended")
 
+    implementation("io.coil-kt:coil-compose:2.0.0-rc01")
 }
