@@ -27,7 +27,7 @@ class TripwakeAppState(
                 val text = snackbarMessage.toMessage(resources)
                 Log.d("TripwakeAppState", "Showing snackbar with message: $text")
                 snackbarHostState.showSnackbar(
-                    text,
+                    message = text,
                     duration = SnackbarDuration.Short
                 )
                 snackbarManager.clearSnackbarState()

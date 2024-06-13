@@ -2,7 +2,9 @@ package com.pravin.tripwake
 
 import android.content.res.Resources
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -29,6 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.pravin.tripwake.screens.login.LoginScreen
 import com.pravin.tripwake.util.snackbar.SnackbarManager
+import com.pravin.tripwake.util.snackbar.SnackbarMessage
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -61,31 +64,28 @@ fun TripWakeApp() {
         Surface(color = MaterialTheme.colorScheme.background) {
             val appState = rememberAppState()
 
-            Scaffold(
-                snackbarHost = {
-                    SnackbarHost(
-                        hostState = appState.snackbarHostState,
-                        modifier = Modifier.padding(16.dp),
-                        snackbar = { snackbarData ->
-                            Snackbar(
-                                snackbarData,
-                                contentColor = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-                    )
-                },
-            ) { innerPaddingModifier ->
-                NavHost(
-                    navController = appState.navController,
-                    startDestination = Screen.Splash.route,
-                    modifier = Modifier.padding(innerPaddingModifier)
-                ) {
-                    tripWakeNavGraph(appState)
+            Column {
+                Scaffold(
+                    snackbarHost = {
+                        SnackbarHost(
+                            hostState = appState.snackbarHostState,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    },
+                ) { innerPaddingModifier ->
+                    NavHost(
+                        navController = appState.navController,
+                        startDestination = Screen.Splash.route,
+                        modifier = Modifier.padding(innerPaddingModifier)
+                    ) {
+                        tripWakeNavGraph(appState)
+                    }
                 }
             }
         }
     }
 }
+
 
 fun NavGraphBuilder.tripWakeNavGraph(appState: TripwakeAppState) {
         composable(Screen.Splash.route) {
