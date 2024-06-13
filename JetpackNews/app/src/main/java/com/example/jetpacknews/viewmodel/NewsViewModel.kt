@@ -24,9 +24,6 @@ class NewsViewModel(private val repository: NewsRepository): ViewModel() {
     private var _newsList = MutableLiveData<List<NewsModel>>()
     val newsList: LiveData<List<NewsModel>> get() = _newsList
 
-    //second state the text typed by the user
-    private val _searchText = MutableStateFlow("")
-    val searchText = _searchText.asStateFlow()
     fun getCatergoriesList() : List<String> = arrayListOf("all","national", "business",
         "sports", "world",
         "politics", "technology", "startup", "entertainment",

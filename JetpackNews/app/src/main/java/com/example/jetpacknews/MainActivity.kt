@@ -1,8 +1,10 @@
 package com.example.jetpacknews
 
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -16,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -49,16 +52,27 @@ class MainActivity : ComponentActivity() {
 
         // Check and request location permissions
         checkLocationPermission()
+        Log.d("location -> MainActivity", "onCreate: ")
         getLastKnownLocation()
         weatherViewModel.location.observe(this) {
+            Log.d("location -> MainActivity", it)
             if (it != null) {
                 weatherViewModel.fetchWeatherData()
             }
         }
-        for (it in viewModel.getCatergoriesList()) {
-            viewModel.fetchNews(it)
+        if(isNetworkAvailable(this)){
+            viewModel.deleteNews()
+            for (it in viewModel.getCatergoriesList()) {
+                viewModel.fetchNews(it)
+            }
+        } else{
+            viewModel.getNews("all")
         }
-        viewModel.getNews("all")
+        viewModel.isDbDataInsertedLiveData.observe(this) {
+            if(it){
+                viewModel.getNews("all")
+            }
+        }
         setContent {
             JetpackNewsTheme {
                 val navController = rememberNavController()
@@ -92,6 +106,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(NavigationItem.Weather.route) {
                             weatherViewModel.getWeather()
+                            Log.i("Navigation -> MainActivity", "Weather")
                             WeatherUI(weatherViewModel = weatherViewModel)
                         }
                     }
@@ -107,24 +122,37 @@ class MainActivity : ComponentActivity() {
         }
     }
     private fun getLastKnownLocation() {
+        Log.i("location -> MainActivity", "getLastKnownLocation")
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.lastLocation
                 .addOnSuccessListener { location: Location? ->
                     location?.let {
                         val loc = location.latitude to location.longitude
                         weatherViewModel.setLocation("${loc.first}, ${loc.second}")
+                        Log.d("location -> MainActivity", loc.toString())
                         getLocationName(loc.first, loc.second)
+                    } ?: kotlin.run {
+                        Log.d("location -> MainActivity", "Location is null")
                     }
                 }
+        } else{
+            Log.d("location -> MainActivity", "Permission not granted")
         }
     }
 
     private fun getLocationName(first: Double, second: Double) {
         val geocoder = Geocoder(this, Locale.getDefault())
         val addresses = geocoder.getFromLocation(first, second, 1)
+        Log.d("location -> MainActivity", addresses.toString())
         if (addresses != null && addresses.isNotEmpty()) {
             val cityName = addresses[0].locality
             weatherViewModel.setLocationName(cityName)
         }
+    }
+
+    private fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        return networkInfo?.isConnectedOrConnecting ?: false
     }
 }

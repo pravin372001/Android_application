@@ -87,6 +87,7 @@ class WeatherViewModel(private val repository: WeatherRepository): ViewModel() {
     }
 
     fun setLocationName(cityName: String?) {
+        Log.i("WeatherViewModel", "Location name: $cityName")
         locationName.value = cityName ?: ""
     }
 

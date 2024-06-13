@@ -60,7 +60,6 @@ class ListViewFragment : Fragment(), CategoryClickListener, ImageClickListener {
             NewsViewModel.NewsViewModelFactory(NewsRepository(requireContext()))
         )[NewsViewModel::class.java]
 
-        Log.i("ListViewFragment -> isNetworkAvailable", isNetworkAvailable(requireContext()).toString())
         if(isNetworkAvailable(requireContext())){
             viewModel.deleteNews()
             for(category in viewModel.getCategories()){

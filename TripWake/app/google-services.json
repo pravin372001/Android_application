@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "280103774890",
+    "project_id": "tripwake-710e9",
+    "storage_bucket": "tripwake-710e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280103774890:android:c490d7740967fda36f7ed3",
+        "android_client_info": {
+          "package_name": "com.pravin.tripwake"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "280103774890-ruecgqvdpdtrd19ttfk546n2gtunuvsb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pravin.tripwake",
+            "certificate_hash": "de0ccbcb237265be790d022a457eba5816f75b63"
+          }
+        },
+        {
+          "client_id": "280103774890-0nj2k4bap7oo4rbhjon9li9r6gffvsbq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0_VRidJ_LJZbBAFNVonHsvGsPc0DfW5U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280103774890-0nj2k4bap7oo4rbhjon9li9r6gffvsbq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
