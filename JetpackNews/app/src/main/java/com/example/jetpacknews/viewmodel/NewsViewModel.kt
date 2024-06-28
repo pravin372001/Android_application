@@ -6,13 +6,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.jetpacknews.api.NewsApi
 import com.example.jetpacknews.database.NewsModel
 import com.example.jetpacknews.model.news.Data
 import com.example.jetpacknews.repository.NewsRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -107,6 +111,33 @@ class NewsViewModel(private val repository: NewsRepository): ViewModel() {
     fun onCategorySelected(text: String) {
         Log.i("NewsViewModel - onCategorySelected", text)
         getNews(text.lowercase())
+        fetchPagingNews(text.lowercase())
+    }
+
+    private var _pagingNewsList = MutableStateFlow<PagingData<NewsModel>>(PagingData.empty())
+    val pagingNewsList = _pagingNewsList.asStateFlow()
+
+    fun fetchPagingNews(category: String) {
+        viewModelScope.launch {
+            val flow = if (category == "all") {
+                repository.getPagingAllNews()
+            } else {
+                repository.getPaginatedByCategory(category)
+            }
+
+            flow.cachedIn(viewModelScope).collectLatest {
+                _pagingNewsList.value = it
+            }
+        }
+    }
+
+    fun getFilteredPagingNews(query: String) {
+        viewModelScope.launch {
+            val flow = repository.getFilteredPagingNews(query)
+            flow.cachedIn(viewModelScope).collectLatest {
+                _pagingNewsList.value = it
+            }
+        }
     }
 
     class NewsViewModelFactory(private val repository: NewsRepository): ViewModelProvider.Factory{

@@ -71,11 +71,13 @@ class MainActivity : ComponentActivity() {
                 viewModel.fetchNews(it)
             }
         } else{
-            viewModel.getNews("all")
+//            viewModel.getNews("all")
+            viewModel.fetchPagingNews("all")
         }
         viewModel.isDbDataInsertedLiveData.observe(this) {
             if(it){
-                viewModel.getNews("all")
+//                viewModel.getNews("all")
+                viewModel.fetchPagingNews("all")
             }
         }
         setContent {

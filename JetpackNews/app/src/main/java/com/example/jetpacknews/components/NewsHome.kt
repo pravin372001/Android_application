@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.jetpacknews.database.NewsModel
 import com.example.jetpacknews.ui.theme.JetpackNewsTheme
 import com.example.jetpacknews.viewmodel.NewsViewModel
@@ -39,8 +40,9 @@ fun NewsHome(
     ) {
         val newsListState = viewModel.newsList.observeAsState()
         val newsState = rememberLazyListState()
+        val paginatedNews = viewModel.pagingNewsList.collectAsLazyPagingItems()
         Spacer(Modifier.height(16.dp))
-        SearchBox { viewModel.filterNews(it) }
+        SearchBox { viewModel.getFilteredPagingNews(it) }
         Spacer(Modifier.height(16.dp))
         CategoryList(
             categories = viewModel.getCatergoriesList(),
@@ -55,6 +57,7 @@ fun NewsHome(
             NewsList(
                 modifier = Modifier.fillMaxWidth(),
                 newsList = newsList,
+                paginatedNews = paginatedNews,
                 navController = navController,
                 newsState = newsState
             )

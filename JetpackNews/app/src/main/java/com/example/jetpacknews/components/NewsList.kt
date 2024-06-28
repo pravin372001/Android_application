@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.DeviceThermostat
 import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -65,6 +66,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.items
 import coil.compose.rememberAsyncImagePainter
 import com.example.jetpacknews.NavigationItem
 import com.example.jetpacknews.R
@@ -158,6 +162,7 @@ fun NewsItem(
 fun NewsList(
     modifier: Modifier = Modifier,
     newsList: List<NewsModel>,
+    paginatedNews: LazyPagingItems<NewsModel>,
     navController: NavController,
     newsState: LazyListState = rememberLazyListState()
     ) {
@@ -171,15 +176,51 @@ fun NewsList(
         state = newsState
     ) {
         Log.i("NewsList", newsList.toString())
-        if (newsList.isNotEmpty()) {
-            items(newsList) { news ->
+//        if (newsList.isNotEmpty()) {
+//            items(newsList) { news ->
+//                NewsItem(
+//                    news = news,
+//                    navController = navController
+//                )
+//            }
+//        } else {
+//            Log.d("NewsList", "Empty")
+//        }
+        items(paginatedNews){news ->
+            if (news != null) {
                 NewsItem(
                     news = news,
                     navController = navController
                 )
             }
-        } else {
-            Log.d("NewsList", "Empty")
+        }
+        paginatedNews.apply {
+            when {
+                loadState.refresh is LoadState.Loading -> {
+                    item {
+                        CircularProgressIndicator(
+                            modifier = Modifier,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+                loadState.append is LoadState.Loading -> {
+                    item {
+                        CircularProgressIndicator(
+                            modifier = Modifier,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+                loadState.refresh is LoadState.Error -> {
+                    item {
+                        Text(
+                            text = "An error has occurred",
+                            color = Color.Red
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -308,7 +349,7 @@ fun SearchBox(
 
 @Preview
 @Composable
-private fun SearchPreview() {
+fun SearchPreview() {
     JetpackNewsTheme {
         SearchBox({})
     }

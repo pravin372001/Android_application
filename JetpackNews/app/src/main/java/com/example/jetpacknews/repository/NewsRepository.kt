@@ -3,12 +3,14 @@ package com.example.jetpacknews.repository
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.jetpacknews.database.NewsDao
 import com.example.jetpacknews.database.NewsDatabase
 import com.example.jetpacknews.database.NewsModel
 import com.example.jetpacknews.viewmodel.NewsViewModel
+import kotlinx.coroutines.flow.Flow
 
 class NewsRepository(context: Context) {
     private val newsDao : NewsDao
@@ -45,8 +47,21 @@ class NewsRepository(context: Context) {
         return newsDao.filterNews(query)
     }
 
-    fun getPaginatedAll(page: Int, pageSize: Int): LiveData<List<NewsModel>> {
-        val offset = (page - 1) * pageSize
-        return newsDao.getPaginatedAll(offset, pageSize)
+    fun getPaginatedByCategory(category: String) : Flow<PagingData<NewsModel>> {
+        return Pager(config = PagingConfig(pageSize = 5, enablePlaceholders = false)) {
+            newsDao.getPagingNewsByCategory(category)
+        }.flow
+    }
+
+    fun getPagingAllNews(): Flow<PagingData<NewsModel>> {
+        return Pager(config = PagingConfig(pageSize = 5, enablePlaceholders = false)) {
+            newsDao.getPagingAllNews()
+        }.flow
+    }
+
+    fun getFilteredPagingNews(query: String): Flow<PagingData<NewsModel>> {
+        return Pager(config = PagingConfig(pageSize = 5, enablePlaceholders = false)) {
+            newsDao.getPagingFilteredNews(query)
+        }.flow
     }
 }

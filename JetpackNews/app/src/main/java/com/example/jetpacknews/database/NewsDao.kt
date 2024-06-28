@@ -1,6 +1,7 @@
 package com.example.jetpacknews.database
 
 import androidx.lifecycle.LiveData
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -41,4 +42,12 @@ interface NewsDao {
     @Query("SELECT * FROM news_table WHERE date = :date AND time = :time LIMIT 1")
     suspend fun getNewsByDateTime(date: String, time: String): NewsModel?
 
+    @Query("SELECT * FROM news_table ORDER BY date DESC, time DESC")
+    fun getPagingAllNews(): PagingSource<Int, NewsModel>
+
+    @Query("SELECT * FROM news_table WHERE category = :category ORDER BY date DESC, time DESC")
+    fun getPagingNewsByCategory(category: String): PagingSource<Int, NewsModel>
+
+    @Query("SELECT * FROM news_table WHERE title LIKE '%' || :query || '%' OR content LIKE '%' || :query || '%' ORDER BY date DESC, time DESC")
+    fun getPagingFilteredNews(query: String): PagingSource<Int, NewsModel>
 }

@@ -106,4 +106,8 @@ dependencies {
     implementation ("androidx.compose.material:material-icons-extended")
 
     implementation("io.coil-kt:coil-compose:2.0.0-rc01")
+
+    implementation ("androidx.paging:paging-runtime:3.1.0")  // For Room
+    implementation ("androidx.paging:paging-compose:1.0.0-alpha15")
+    implementation ("androidx.room:room-paging:2.4.0")
 }
