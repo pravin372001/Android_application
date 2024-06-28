@@ -1,4 +1,4 @@
-package com.pravin.tripwake
+package com.pravin.tripwake.screens.splash
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

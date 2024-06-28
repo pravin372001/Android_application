@@ -1,4 +1,4 @@
-package com.pravin.tripwake
+package com.pravin.tripwake.screens.splash
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -15,11 +15,14 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.pravin.tripwake.R
+import com.pravin.tripwake.Screen
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
     openAndPopUp: (String, String) -> Unit,
+    viewModel: SplashViewModel = hiltViewModel()
 ) {
     Box(
         modifier = Modifier
@@ -43,11 +46,11 @@ fun SplashScreen(
 
         LaunchedEffect(Unit) {
             delay(3000)
-//            if(viewModel.isLoggedIn.value) {
+            if(viewModel.isLoggedIn.value) {
+                openAndPopUp(Screen.Main.route, Screen.Splash.route)
+            } else {
                 openAndPopUp(Screen.Login.route, Screen.Splash.route)
-//            } else {
-//                openAndPopUp(Screen.Login.route, Screen.Splash.route)
-//            }
+            }
         }
     }
 }

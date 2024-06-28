@@ -21,4 +21,16 @@
     <string name="create_account">Create account</string>
     <string name="password_error">Your password should have at least six digits and include one digit, one lower case letter and one upper case letter.</string>
     <string name="password_match_error">Passwords do not match.</string>
+
+    <!-- RegisterScreen -->
+    <string name="register">Register</string>
+    <string name="register_details">Enter your details</string>
+
+    <!-- WebId -->
+    <string name="google_web_client_id">280103774890-0nj2k4bap7oo4rbhjon9li9r6gffvsbq.apps.googleusercontent.com</string>
+    <string name="MAPS_API_KEY">AIzaSyBpDkR1Nxe2NV6OeI9FKQYZfWcOZNAgN5c</string>
+
+
+    <!-- MainScreen -->
+    <string name="empty_destination_error">Please enter a destination.</string>
 </resources>

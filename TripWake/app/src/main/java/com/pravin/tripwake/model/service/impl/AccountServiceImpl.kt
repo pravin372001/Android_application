@@ -1,18 +1,30 @@
 package com.pravin.tripwake.model.service.impl
 
+import android.app.Activity
+import android.content.Context
+import android.util.Log
+import androidx.credentials.ClearCredentialStateRequest
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.perf.metrics.Trace
-import com.google.firebase.perf.trace
+import com.google.firebase.auth.GoogleAuthProvider
 import com.pravin.tripwake.model.User
 import com.pravin.tripwake.model.service.AccountService
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
-class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : AccountService {
+class AccountServiceImpl @Inject constructor(
+    private val auth: FirebaseAuth
+) : AccountService {
 
     override val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()
@@ -47,8 +59,12 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
         auth.currentUser!!.linkWithCredential(credential).await()
     }
 
-    override suspend fun googleSignIn(idToken: String) {
-
+    override suspend fun registerUser(email: String, password: String) {
+        try {
+            auth.createUserWithEmailAndPassword(email, password).await()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 
@@ -58,9 +74,49 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
 
     override suspend fun signOut() {
         auth.signOut()
+
     }
 
-    companion object {
-        private const val LINK_ACCOUNT_TRACE = "linkAccount"
+    override suspend fun signInWithGoogle(context: Context, idToken: String): Boolean {
+        if (context !is Activity) {
+            throw IllegalArgumentException("Context must be an Activity")
+        }
+        var success: Boolean = false
+        val credentialManager = CredentialManager.create(context)
+        val googleIdOption = GetGoogleIdOption.Builder()
+            .setFilterByAuthorizedAccounts(false)
+            .setServerClientId(idToken)
+            .build()
+
+        val request = GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOption)
+            .build()
+
+        withContext(Dispatchers.Main) {
+            try {
+                val result = credentialManager.getCredential(request = request, context = context)
+                val credential = result.credential
+                val googleIdTokenCredential = GoogleIdTokenCredential
+                    .createFrom(credential.data)
+                val googleIdToken = googleIdTokenCredential.idToken
+                val firebaseCredential = GoogleAuthProvider.getCredential(googleIdToken, null)
+                auth.signInWithCredential(firebaseCredential)
+                    .addOnSuccessListener {
+                        Log.d("AccountServiceImpl", "signInWithGoogle: Success")
+                        success = true
+                    }
+                    .addOnFailureListener { e ->
+                        Log.d("AccountServiceImpl", "signInWithGoogle: Failure", e)
+                    }
+
+            } catch (e: Exception) {
+                credentialManager.clearCredentialState(
+                    ClearCredentialStateRequest()
+                )
+                Log.e("AccountServiceImpl", "signInWithGoogle: Exception", e)
+            }
+        }
+        delay(1000)
+        return success
     }
 }

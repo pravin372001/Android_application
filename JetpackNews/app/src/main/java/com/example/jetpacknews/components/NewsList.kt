@@ -38,6 +38,8 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -221,6 +223,42 @@ fun BottomNavigation(
                 }
             )
         }
+    }
+}
+
+@Composable
+fun BottomNavigationRail(
+    modifier: Modifier = Modifier,
+    navController: NavController
+) {
+    val curNav = rememberSaveable {
+        mutableStateOf(NavigationItem.News.route)
+    }
+
+    val items = listOf(
+        Triple(NavigationItem.News.route , Icons.Filled.Newspaper , R.string.bottom_news),
+        Triple(NavigationItem.Weather.route , Icons.Filled.DeviceThermostat , R.string.bottom_weather)
+    )
+    items.forEach { (navItem, icon, labelRes) ->
+        NavigationRailItem(
+            icon = {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null
+                )
+            },
+            label = {
+                Text(stringResource(labelRes))
+            },
+            selected = curNav.value == navItem,
+            onClick = {
+                if (curNav.value != navItem) {
+                    navController.popBackStack()
+                    curNav.value = navItem
+                    navController.navigate(navItem)
+                }
+            }
+        )
     }
 }
 
