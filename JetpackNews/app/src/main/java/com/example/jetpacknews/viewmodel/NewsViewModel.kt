@@ -22,7 +22,7 @@ import kotlinx.coroutines.withContext
 
 class NewsViewModel(private val repository: NewsRepository): ViewModel() {
 
-    private val isDbDataInserted = MutableLiveData<Boolean>()
+    private val isDbDataInserted = MutableLiveData<Boolean>(false)
     val isDbDataInsertedLiveData: LiveData<Boolean> = isDbDataInserted
 
     private var _newsList = MutableLiveData<List<NewsModel>>()
@@ -42,9 +42,10 @@ class NewsViewModel(private val repository: NewsRepository): ViewModel() {
                 }
                 Log.i("NewsViewModel - fetchNews", "$newsData")
                 formatNews(newsData.data, newsData.category, newsData.success)
-                isDbDataInserted.value = true
             } catch (e: Exception) {
                 Log.i("NewsViewModel - Error", "${e.stackTrace}")
+            } finally {
+                isDbDataInserted.value = true
             }
         }
     }
@@ -127,6 +128,7 @@ class NewsViewModel(private val repository: NewsRepository): ViewModel() {
 
             flow.cachedIn(viewModelScope).collectLatest {
                 _pagingNewsList.value = it
+                Log.i("NewsViewModel - fetchPagingNews", it.toString())
             }
         }
     }
