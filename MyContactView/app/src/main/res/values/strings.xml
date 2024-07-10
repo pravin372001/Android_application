@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MyContactView</string>
+    <string name="contact_profile_picture">Jothipravin</string>
+    <string name="contact_name">Jothipravin</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

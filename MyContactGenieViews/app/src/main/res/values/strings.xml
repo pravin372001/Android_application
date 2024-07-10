@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">MyContactGenie</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="back">Back</string>
+    <string name="email">Email</string>
+    <string name="contact_genue">Contact Genue</string>
+    <string name="hanan_hagerup_example_com">hanan.hagerup@example.com</string>
+    <string name="phone">phone</string>
+    <string name="_25509026">25509026</string>
+    <string name="cell">cell</string>
+    <string name="network_error">Network error</string>
+    <string name="retry">Retry</string>
+</resources>

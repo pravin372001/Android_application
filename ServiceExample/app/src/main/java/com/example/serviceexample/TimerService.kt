@@ -88,15 +88,13 @@ class TimerService : Service() {
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Timer Service Channel",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            val manager = getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(channel)
-            Log.d("ServiceExample -> TimerService", "Notification channel created")
-        }
+        val channel = NotificationChannel(
+            CHANNEL_ID,
+            "Timer Service Channel",
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        val manager = getSystemService(NotificationManager::class.java)
+        manager.createNotificationChannel(channel)
+        Log.d("ServiceExample -> TimerService", "Notification channel created")
     }
 }
