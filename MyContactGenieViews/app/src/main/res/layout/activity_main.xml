@@ -1,29 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.slidingpanelayout.widget.SlidingPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/sliding_pane_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground">
+    android:orientation="vertical">
 
-    <!-- List Fragment -->
-    <fragment
-        android:id="@+id/list_fragment"
-        android:name="com.pravin.mycontactgenieviews.ListFragment"
-        android:layout_width="280dp"
+    <androidx.slidingpanelayout.widget.SlidingPaneLayout
+        android:id="@+id/sliding_pane_layout"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout="@layout/fragment_list"
-        tools:layout="@layout/fragment_list" />
+        android:background="?android:attr/colorBackground">
 
-    <!-- Detail Fragment -->
-    <fragment
-        android:id="@+id/detail_fragment"
+        <!-- List Fragment -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/list_fragment"
+            android:name="com.pravin.mycontactgenieviews.ListFragment"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            app:layout="@layout/fragment_list"
+            tools:layout="@layout/fragment_list" />
+
+        <!-- Detail Fragment -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/detail_fragment"
+            android:name="com.pravin.mycontactgenieviews.DetailFragment"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:layout="@layout/fragment_detail"
+            tools:layout="@layout/fragment_detail" />
+
+    </androidx.slidingpanelayout.widget.SlidingPaneLayout>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:name="com.pravin.mycontactgenieviews.DetailFragment"
-        android:layout_width="300dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        app:layout="@layout/fragment_detail"
+        android:visibility="gone"
         tools:layout="@layout/fragment_detail" />
-
-</androidx.slidingpanelayout.widget.SlidingPaneLayout>
+</LinearLayout>

@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.window.layout.FoldingFeature
 import com.pravin.mycontactgenieviews.remote.ContactApi
 import com.pravin.mycontactgenieviews.remote.model.Contact
 import com.pravin.mycontactgenieviews.remote.model.Result
@@ -24,13 +25,22 @@ class ContactViewModel(application: Application): AndroidViewModel(application) 
     private val _contacts = MutableLiveData<Contact>()
     val contacts: LiveData<Contact> get() = _contacts
 
-    private val _currentContact = MutableLiveData<Result>()
-    val currentContact: LiveData<Result> get() = _currentContact
+    private val _currentContact = MutableLiveData<Result?>()
+    val currentContact: LiveData<Result?> get() = _currentContact
 
-    fun setCurrentContact(contact: Result) {
+    private val _foldState = MutableLiveData<FoldingFeature?>()
+    val foldState: LiveData<FoldingFeature?> get() = _foldState
+
+    fun setCurrentContact(contact: Result?) {
         _currentContact.value = contact
         Log.d("ContactViewModel", "Current contact set to $contact")
     }
+
+    fun setFoldState(foldState: FoldingFeature?) {
+        _foldState.value = foldState
+        Log.d("ContactViewModel", "Fold state set to $foldState")
+    }
+
 
     init {
         getContacts()

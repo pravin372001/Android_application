@@ -37,6 +37,9 @@ android {
     dataBinding{
         enable = true
     }
+    viewBinding {
+        enable= true
+    }
 }
 
 dependencies {
@@ -68,5 +71,6 @@ dependencies {
 
 
     implementation ("com.squareup.picasso:picasso:2.71828")
+    implementation ("androidx.window:window:1.0.0")
 
 }

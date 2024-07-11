@@ -2,7 +2,6 @@ package com.pravin.mycontactgenieviews
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pravin.mycontactgenieviews.adapter.ProfileAdapter
 import com.pravin.mycontactgenieviews.databinding.FragmentListBinding
-import com.pravin.mycontactgenieviews.remote.model.Id
-import com.pravin.mycontactgenieviews.remote.model.Name
-import com.pravin.mycontactgenieviews.remote.model.Picture
-import com.pravin.mycontactgenieviews.remote.model.Result
 import com.pravin.mycontactgenieviews.viewmodel.ContactViewModel
 
 class ListFragment : Fragment() {

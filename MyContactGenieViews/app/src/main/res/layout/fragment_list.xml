@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@color/md_theme_onPrimaryContainer"
-                app:title="List Screen"
+                app:title="Contact Genie"
                 app:titleTextColor="@color/md_theme_onPrimary_highContrast" />
 
             <androidx.recyclerview.widget.RecyclerView
