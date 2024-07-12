@@ -25,7 +25,25 @@ android {
                 "proguard-rules.pro"
             )
         }
+
     }
+
+    flavorDimensions.add("default")
+
+    productFlavors {
+        create("contact") {
+            dimension = "default"
+            applicationIdSuffix = ".contact"
+            versionNameSuffix = "-contact"
+        }
+
+        create("user") {
+            dimension = "default"
+            applicationIdSuffix = ".user"
+            versionNameSuffix = "-user"
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8

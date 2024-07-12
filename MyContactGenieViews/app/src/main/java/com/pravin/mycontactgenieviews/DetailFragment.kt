@@ -98,7 +98,7 @@ class DetailFragment : Fragment() {
             Log.d("DetailFragment", "In showProfileDetails: if")
         } else{
             Log.d("DetailFragment", "In showProfileDetails: else")
-            binding.detailToolbar.title = "Contact Genie"
+            binding.detailToolbar.title = resources.getString(R.string.app_name)
             binding.detailToolbar.navigationIcon = resources.getDrawable(R.drawable.baseline_arrow_back_24)
         }
         Picasso.get().load(result.picture.large).into(binding.detailImage)

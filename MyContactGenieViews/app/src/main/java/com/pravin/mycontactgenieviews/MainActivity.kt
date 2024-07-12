@@ -14,6 +14,7 @@ import androidx.window.layout.WindowLayoutInfo
 import androidx.window.layout.WindowMetricsCalculator
 import com.google.android.material.color.DynamicColors
 import com.pravin.mycontactgenieviews.databinding.ActivityMainBinding
+import com.pravin.mycontactgenieviews.util.FlavorUtils
 import com.pravin.mycontactgenieviews.util.getFeatureBoundsInWindow
 import com.pravin.mycontactgenieviews.util.isBookPosture
 import com.pravin.mycontactgenieviews.util.isFlatPostureHorizontal
@@ -32,13 +33,13 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[ContactViewModel::class.java]
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        DynamicColors.applyToActivityIfAvailable(this)
         val windowInfoTracker = WindowInfoTracker.getOrCreate(this)
         lifecycleScope.launch {
             windowInfoTracker.windowLayoutInfo(this@MainActivity).collect { layoutInfo ->
                 updateLayout(layoutInfo)
             }
         }
+        FlavorUtils.printFlavorName()
     }
 
 
