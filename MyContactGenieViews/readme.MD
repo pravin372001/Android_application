@@ -1,4 +1,4 @@
-![WhatsApp Image 2024-07-12 at 16.02.49_775ffd37.jpg](..%2F..%2FDownloads%2FWhatsApp%20Image%202024-07-12%20at%2016.02.49_775ffd37.jpg)
-![WhatsApp Image 2024-07-12 at 16.02.49_aa078ced.jpg](..%2F..%2FDownloads%2FWhatsApp%20Image%202024-07-12%20at%2016.02.49_aa078ced.jpg)
-![WhatsApp Image 2024-07-12 at 16.02.48_90b6ec6a.jpg](..%2F..%2FDownloads%2FWhatsApp%20Image%202024-07-12%20at%2016.02.48_90b6ec6a.jpg)
-![WhatsApp Image 2024-07-12 at 16.02.48_fa2a16ce.jpg](..%2F..%2FDownloads%2FWhatsApp%20Image%202024-07-12%20at%2016.02.48_fa2a16ce.jpg)
+![contant_genie_list.jpg](app%2Fsrc%2Fmain%2Fres%2Fdrawable%2Fcontant_genie_list.jpg)
+![contact_genie_detail.jpg](app%2Fsrc%2Fmain%2Fres%2Fdrawable%2Fcontact_genie_detail.jpg)
+![user__genie_detail.jpg](app%2Fsrc%2Fmain%2Fres%2Fdrawable%2Fuser__genie_detail.jpg)
+![user_genie_list.jpg](app%2Fsrc%2Fmain%2Fres%2Fdrawable%2Fuser_genie_list.jpg)
