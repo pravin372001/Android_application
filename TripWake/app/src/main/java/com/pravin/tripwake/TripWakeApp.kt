@@ -124,7 +124,8 @@ fun NavGraphBuilder.tripWakeNavGraph(appState: TripwakeAppState, viewModel: MapS
 
     composable(Screen.Main.route) {
         TripListScreen(
-            openAndPopUp = { route -> appState.navigate(route) }
+            openAndPopUp = { route -> appState.navigate(route) },
+            viewModel = viewModel
         )
     }
 

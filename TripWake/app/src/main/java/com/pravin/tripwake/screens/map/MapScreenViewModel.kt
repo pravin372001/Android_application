@@ -17,7 +17,9 @@ import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.maps.android.compose.CameraPositionState
 import com.pravin.tripwake.Screen
+import com.pravin.tripwake.database.Trip
 import com.pravin.tripwake.model.service.MapService
+import com.pravin.tripwake.repository.TripRepository
 import com.pravin.tripwake.util.snackbar.SnackbarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -34,11 +36,15 @@ import com.pravin.tripwake.R.string as AppText
 @HiltViewModel
 class MapScreenViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val mapService: MapService
+    private val mapService: MapService,
+    private val tripRepository: TripRepository
 ) :ViewModel() {
 
     private val placesClient = Places.createClient(context)
     private val token = AutocompleteSessionToken.newInstance()
+
+    private var _tripList = MutableStateFlow<List<Trip>>(mutableListOf())
+            val tripList: StateFlow<List<Trip>> = _tripList
 
     private val _searchUiState = MutableStateFlow(SearchUiState())
     val searchUiState: StateFlow<SearchUiState> = _searchUiState
@@ -84,9 +90,33 @@ class MapScreenViewModel @Inject constructor(
     }
 
     fun onCreateTripClicked(openAndPopUp: (String, String) -> Unit) {
-        if (uiState.value.destination.isEmpty()) {
+        if (uiState.value.destination.isEmpty() || uiState.value.destination == "Destination") {
             SnackbarManager.showMessage(AppText.empty_destination_error)
             return
+        } else {
+            onCreateTrip(openAndPopUp)
+        }
+    }
+
+    private fun onCreateTrip(openAndPopUp: (String, String) -> Unit) {
+        val trip = Trip(
+            startLocation = uiState.value.currentLocation,
+            endLocation = uiState.value.destinationPoints,
+            ployLine = uiState.value.polyline,
+            radius = uiState.value.radius.toFloat(),
+            isTracking = uiState.value.isTracking
+        )
+        viewModelScope.launch {
+            tripRepository.insertTrip(trip)
+            openAndPopUp(Screen.Main.route, Screen.Map.route)
+        }
+    }
+
+    fun getAllTrips() {
+        viewModelScope.launch {
+            tripRepository.getAllTrips().collect {
+                _tripList.value = it
+            }
         }
     }
 
@@ -99,11 +129,13 @@ class MapScreenViewModel @Inject constructor(
                 val routes = directions.routes
                 if (routes.isNotEmpty()) {
                     val overviewPolyline = routes[0].overview_polyline
-                    val points = overviewPolyline?.points
+                    val points = overviewPolyline.points
                     if (points != null) {
                         Log.d("MapScreenViewModel", "getDirections: $points")
                         decoPoints(points)
+                        Log.d("MapScreenViewModel", "before animation")
                         animateToCurrentLocation(currentLocation = uiState.value.destinationPoints)
+                        Log.d("MapScreenViewModel", "after animation")
                     } else {
                         Log.e("MapScreenViewModel", "OverviewPolyline is null or does not contain points")
                     }
@@ -147,14 +179,22 @@ class MapScreenViewModel @Inject constructor(
         }
     }
 
+    fun onselectTrip(trip: Trip){
+        val destination = getPlaceNameByLatLan(trip.endLocation.latitude, trip.endLocation.longitude)
+        uiState.value = uiState.value.copy(destinationPoints = trip.endLocation, currentLocation = trip.startLocation, polyline = trip.ployLine, radius = trip.radius, isTracking = trip.isTracking, destination = destination)
+    }
+
     suspend fun animateToCurrentLocation(
         cameraPositionState: CameraPositionState = CameraPositionState(),
         currentLocation: LatLng = uiState.value.currentLocation
     ) {
+        Log.d("MapScreenViewModel", "animateToCurrentLocation: $currentLocation")
         val zoom = if(currentLocation == uiState.value.currentLocation) 15f else 10f
         cameraPositionState.animate(
             update = CameraUpdateFactory.newLatLngZoom(currentLocation, zoom),
         )
+        Log.d("MapScreenViewModel", "animateToCurrentLocation: $currentLocation")
+        Log.d("MapScreenViewModel", "animateToCurrentLocation: ${uiState.value.currentLocation}")
     }
 
     private suspend fun getLatLngFromCityName(context: Context, cityName: String) {
@@ -235,5 +275,11 @@ class MapScreenViewModel @Inject constructor(
             getLatLngFromCityName(context, placeName)
         }
         navigateToMap(Screen.Map.route)
+    }
+
+    fun getPlaceNameByLatLan(lat: Double, lan: Double): String {
+        val geocoder = Geocoder(context, Locale.getDefault())
+        val addresses = geocoder.getFromLocation(lat, lan, 1)
+        return addresses?.get(0)?.getAddressLine(0) ?: ""
     }
 }

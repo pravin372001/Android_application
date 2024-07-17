@@ -1,6 +1,7 @@
 package com.pravin.tripwake.model.service.module
 
 import android.content.Context
+import com.pravin.tripwake.repository.TripRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,4 +14,7 @@ object AppModule {
 
     @Provides
     fun provideContext(@ApplicationContext context: Context): Context = context
+
+    @Provides
+    fun provideRepository(context: Context): TripRepository = TripRepository(context)
 }

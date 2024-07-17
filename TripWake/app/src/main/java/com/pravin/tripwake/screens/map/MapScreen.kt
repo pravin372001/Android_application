@@ -35,6 +35,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,6 +55,7 @@ import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -77,18 +79,6 @@ fun MapScreen(
     viewModel: MapScreenViewModel
     ) {
 
-    Log.d("MapScreen", "uiState: $viewModel")
-    val locationPermissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
-
-    LaunchedEffect(Unit) {
-        locationPermissionState.launchPermissionRequest()
-    }
-
-    if (locationPermissionState.status.isGranted) {
-        LaunchedEffect(Unit) {
-            viewModel.fetchCurrentLocation()
-        }
-    }
     val uiState = viewModel.uiState
 
     val cameraPositionState = rememberCameraPositionState{
@@ -231,6 +221,7 @@ fun MapScreenContent(
     }
 }
 
+
 @Composable
 fun CustomTopBar(
     onBackClick: () -> Unit,
@@ -370,7 +361,7 @@ fun CustomTopBar(
                         onValueChange = {
                             onRadiusChange(it)
                         },
-                        enabled = uiState.destination.isNotEmpty(),
+                        enabled = uiState.destination.isNotEmpty() && uiState.destination != "Destination",
                         valueRange = 1000f..10000f
                     )
                     Spacer(modifier = Modifier.width(8.dp))

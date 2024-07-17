@@ -4,6 +4,7 @@ import com.pravin.tripwake.model.service.AccountService
 import com.pravin.tripwake.model.service.MapService
 import com.pravin.tripwake.model.service.impl.AccountServiceImpl
 import com.pravin.tripwake.model.service.impl.MapServiceImpl
+import com.pravin.tripwake.repository.TripRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
