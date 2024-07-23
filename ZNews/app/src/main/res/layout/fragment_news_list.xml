@@ -6,18 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".fragments.NewsListFragment">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/list_tool_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/md_theme_primary"
-        app:titleTextColor="@color/md_theme_onPrimary"
-        app:title="@string/app_name"
-        />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/list_tool_bar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@color/md_theme_primary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/app_name"
+            app:titleTextColor="@color/md_theme_onPrimary" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/user_name"
