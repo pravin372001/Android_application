@@ -14,8 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -30,9 +28,8 @@ import com.pravin.tripwake.Screen
 import com.pravin.tripwake.database.Trip
 import com.pravin.tripwake.screens.map.MapScreenViewModel
 import com.pravin.tripwake.ui.theme.TripWakeTheme
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.flowOf
+import com.pravin.tripwake.util.snackbar.SnackbarManager
+import com.pravin.tripwake.R.string as AppText
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -42,7 +39,6 @@ fun TripListScreen(
     viewModel: MapScreenViewModel
 ) {
     Log.d("MapScreen", "uiState: $viewModel")
-    Log.d("MapScreen", "uiState value: ${viewModel.uiState.value.toString()}")
     val locationPermissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
 
     LaunchedEffect(Unit) {
@@ -51,17 +47,22 @@ fun TripListScreen(
 
     if (locationPermissionState.status.isGranted) {
         LaunchedEffect(Unit) {
+            Log.d("MapScreen", "LaunchedEffect: ")
             viewModel.fetchCurrentLocation()
         }
     }
 
+    Log.d("MapScreen", "uiState value: ${viewModel.uiState.value.toString()}")
     viewModel.getAllTrips()
+    val trips = viewModel.tripList.collectAsState(initial = emptyList())
     TripListScreenContent(
         modifier = modifier,
         openAndPopUp = openAndPopUp,
-        tripList = viewModel.tripList,
+        tripList = trips.value,
         getPlaceName = viewModel::getPlaceNameByLatLan,
-        onTripItemClick = viewModel::onselectTrip
+        onTripItemClick = viewModel::onselectTrip,
+        updateTrip = viewModel::updateTrip,
+        resetUiState = viewModel::resetUiState
         )
 }
 
@@ -69,18 +70,20 @@ fun TripListScreen(
 fun TripListScreenContent(
     modifier: Modifier = Modifier,
     openAndPopUp: (String) -> Unit,
-    tripList: Flow<List<Trip>>,
+    tripList: List<Trip>,
     getPlaceName: (Double, Double) -> String,
     onTripItemClick: (Trip) -> Unit,
+    updateTrip: (Int) -> Unit,
+    resetUiState: () -> Unit = {}
 ) {
-    val list = tripList.collectAsState(initial = emptyList())
     LazyColumn {
-        items(list.value) {
+        items(tripList.reversed()) {
             TripItem(
                 trip = it,
                 getPlaceName = getPlaceName,
                 openAndPopUp = openAndPopUp,
-                onTripItemClick = onTripItemClick
+                onTripItemClick = onTripItemClick,
+                updateTrip = updateTrip
             )
         }
     }
@@ -90,7 +93,12 @@ fun TripListScreenContent(
     ) {
         FloatingActionButton(
             onClick = {
-                openAndPopUp(Screen.Map.route)
+                if(tripList.isEmpty() || !tripList.last().isTracking){
+                    openAndPopUp(Screen.Map.route)
+                    resetUiState()
+                } else {
+                    SnackbarManager.showMessage(AppText.trip_is_tracking)
+                }
             },
             modifier = modifier.padding(16.dp)
         ) {
@@ -105,9 +113,10 @@ private fun TripListScreenPreview() {
     TripWakeTheme {
         TripListScreenContent(
             openAndPopUp = { _ -> },
-            tripList = flowOf(listOf()),
+            tripList = listOf(),
             getPlaceName = { _, _ -> "" },
-            onTripItemClick = {}
+            onTripItemClick = {},
+            updateTrip = {}
         )
     }
 }

@@ -26,6 +26,9 @@ class TripRepository(context: Context) {
         return tripDao.getLastTrip()
     }
 
+    suspend fun updateTrip(tripId: Int) {
+        tripDao.updateTrip(tripId)
+    }
 
 
 }

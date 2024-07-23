@@ -28,7 +28,6 @@
         </activity>
         <service
         android:name=".TimerService"
-            android:foregroundServiceType="dataSync"
         android:exported="true" />
     </application>
 

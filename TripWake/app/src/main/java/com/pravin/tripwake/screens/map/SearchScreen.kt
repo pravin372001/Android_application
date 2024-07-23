@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -76,10 +77,12 @@ fun SearchScreenContent(
                 }
             },
             trailingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = null
-                )
+                IconButton(onClick = { onQueryChanged("") }) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = null
+                    )
+                }
             },
             singleLine = true,
         )

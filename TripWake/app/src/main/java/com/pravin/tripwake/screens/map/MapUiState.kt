@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 
 data class MapUiState(
+    val tripId: Int,
     val destinationPoints: LatLng,
     val destination: String,
     val polyline: List<LatLng>,

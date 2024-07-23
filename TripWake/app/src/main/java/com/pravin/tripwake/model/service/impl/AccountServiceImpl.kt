@@ -74,7 +74,6 @@ class AccountServiceImpl @Inject constructor(
 
     override suspend fun signOut() {
         auth.signOut()
-
     }
 
     override suspend fun signInWithGoogle(context: Context, idToken: String): Boolean {

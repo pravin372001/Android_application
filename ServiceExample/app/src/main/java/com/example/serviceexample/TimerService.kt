@@ -4,7 +4,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
@@ -26,11 +25,14 @@ class TimerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        Log.d("TimerService", "Service created")
         createNotificationChannel()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.d("TimerService", "Service started with action: ${intent?.action}")
         if (intent?.action == STOP_TIMER_ACTION) {
+            Log.d("TimerService", "Stop action received")
             stopSelf()
             return START_NOT_STICKY
         }
@@ -38,10 +40,12 @@ class TimerService : Service() {
         if (!isRunning) {
             isRunning = true
             coroutineScope.launch {
+                Log.d("TimerService", "Timer started")
                 while (isRunning) {
                     delay(1000)
                     timeInSeconds++
                     val time = formatTime(timeInSeconds)
+                    Log.d("TimerService", "Time updated: $time")
                     Intent(TIMER_UPDATED).apply {
                         putExtra(TIME_EXTRA, time)
                         sendBroadcast(this)
@@ -55,6 +59,7 @@ class TimerService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.d("TimerService", "Service destroyed")
         isRunning = false
         coroutineScope.cancel()
     }
@@ -79,22 +84,25 @@ class TimerService : Service() {
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Timer Service")
             .setContentText(time)
-            .setSmallIcon(R.drawable.timer) // Use a valid drawable resource
-            .addAction(R.drawable.stop_button, "Stop", stopPendingIntent) // Use a valid drawable resource
+            .setSmallIcon(R.drawable.timer) // Ensure this drawable exists
+            .addAction(R.drawable.stop_button, "Stop", stopPendingIntent) // Ensure this drawable exists
             .setOngoing(true)
             .build()
 
+        Log.d("TimerService", "Notification updated: $time")
         startForeground(1, notification)
     }
 
     private fun createNotificationChannel() {
-        val channel = NotificationChannel(
-            CHANNEL_ID,
-            "Timer Service Channel",
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
-        val manager = getSystemService(NotificationManager::class.java)
-        manager.createNotificationChannel(channel)
-        Log.d("ServiceExample -> TimerService", "Notification channel created")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                "Timer Service Channel",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            val manager = getSystemService(NotificationManager::class.java)
+            manager?.createNotificationChannel(channel)
+            Log.d("TimerService", "Notification channel created")
+        }
     }
 }

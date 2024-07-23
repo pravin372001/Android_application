@@ -136,8 +136,10 @@ dependencies {
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
 
-
+    implementation ("androidx.work:work-runtime-ktx:2.7.1")
     implementation ("com.google.android.gms:play-services-location:21.0.1")
     implementation ("com.google.accompanist:accompanist-permissions:0.29.2-rc")
+
+    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
 
 }

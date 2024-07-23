@@ -5,11 +5,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 
 class TimerViewModel(application: Application) : AndroidViewModel(application) {
     private val _time = MutableStateFlow("00:00:00")
@@ -24,19 +23,23 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     init {
+        Log.d("TimerViewModel", "Initializing TimerViewModel")
         application.registerReceiver(timerReceiver, IntentFilter(TimerService.TIMER_UPDATED))
     }
 
     fun startTimer() {
+        Log.d("TimerViewModel", "Starting Timer")
         getApplication<Application>().startService(Intent(getApplication(), TimerService::class.java))
     }
 
     fun stopTimer() {
+        Log.d("TimerViewModel", "Stopping Timer")
         getApplication<Application>().stopService(Intent(getApplication(), TimerService::class.java))
     }
 
     override fun onCleared() {
         super.onCleared()
+        Log.d("TimerViewModel", "Clearing TimerViewModel")
         getApplication<Application>().unregisterReceiver(timerReceiver)
     }
 }

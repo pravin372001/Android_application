@@ -1,14 +1,20 @@
 package com.pravin.tripwake.screens.map
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.content.IntentSender
 import android.location.Geocoder
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -18,10 +24,13 @@ import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRe
 import com.google.maps.android.compose.CameraPositionState
 import com.pravin.tripwake.Screen
 import com.pravin.tripwake.database.Trip
+import com.pravin.tripwake.listener.ActivityProvider
+import com.pravin.tripwake.listener.TrackingListener
 import com.pravin.tripwake.model.service.MapService
 import com.pravin.tripwake.repository.TripRepository
 import com.pravin.tripwake.util.snackbar.SnackbarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,18 +47,21 @@ class MapScreenViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val mapService: MapService,
     private val tripRepository: TripRepository
-) :ViewModel() {
+) :ViewModel(), TrackingListener {
 
     private val placesClient = Places.createClient(context)
     private val token = AutocompleteSessionToken.newInstance()
-
+    private val settingsClient: SettingsClient = LocationServices.getSettingsClient(context)
     private var _tripList = MutableStateFlow<List<Trip>>(mutableListOf())
             val tripList: StateFlow<List<Trip>> = _tripList
 
     private val _searchUiState = MutableStateFlow(SearchUiState())
     val searchUiState: StateFlow<SearchUiState> = _searchUiState
 
+    private var cameraPositionState: CameraPositionState? = null
+
     var uiState = mutableStateOf(MapUiState(
+        tripId = 0,
         destinationPoints = LatLng(0.0, 0.0),
         destination = "Destination",
         polyline = listOf(),
@@ -80,8 +92,15 @@ class MapScreenViewModel @Inject constructor(
         uiState.value = uiState.value.copy(radius = newValue)
     }
 
-    fun onIsTrackingChange(newValue: Boolean) {
+    private fun onIsTrackingChange(newValue: Boolean) {
+        Log.d("MapScreenViewModel", "onIsTrackingChange: $newValue")
         uiState.value = uiState.value.copy(isTracking = newValue)
+        updateTrip(uiState.value.tripId)
+    }
+
+    override fun onTrackingChanged(isTracking: Boolean) {
+        Log.d("MapScreenViewModel", "onTrackingChanged: $isTracking")
+        onIsTrackingChange(isTracking)
     }
 
     private fun onMyLocationClick(newValue: LatLng) {
@@ -99,6 +118,7 @@ class MapScreenViewModel @Inject constructor(
     }
 
     private fun onCreateTrip(openAndPopUp: (String, String) -> Unit) {
+        uiState.value = uiState.value.copy(isTracking = true)
         val trip = Trip(
             startLocation = uiState.value.currentLocation,
             endLocation = uiState.value.destinationPoints,
@@ -134,7 +154,7 @@ class MapScreenViewModel @Inject constructor(
                         Log.d("MapScreenViewModel", "getDirections: $points")
                         decoPoints(points)
                         Log.d("MapScreenViewModel", "before animation")
-                        animateToCurrentLocation(currentLocation = uiState.value.destinationPoints)
+                        animateToCurrentLocation(cameraPositionState!!, currentLocation = uiState.value.destinationPoints)
                         Log.d("MapScreenViewModel", "after animation")
                     } else {
                         Log.e("MapScreenViewModel", "OverviewPolyline is null or does not contain points")
@@ -181,13 +201,14 @@ class MapScreenViewModel @Inject constructor(
 
     fun onselectTrip(trip: Trip){
         val destination = getPlaceNameByLatLan(trip.endLocation.latitude, trip.endLocation.longitude)
-        uiState.value = uiState.value.copy(destinationPoints = trip.endLocation, currentLocation = trip.startLocation, polyline = trip.ployLine, radius = trip.radius, isTracking = trip.isTracking, destination = destination)
+        uiState.value = uiState.value.copy(tripId = trip.id,destinationPoints = trip.endLocation, currentLocation = trip.startLocation, polyline = trip.ployLine, radius = trip.radius, isTracking = trip.isTracking, destination = destination)
     }
 
     suspend fun animateToCurrentLocation(
-        cameraPositionState: CameraPositionState = CameraPositionState(),
+        cameraPositionState: CameraPositionState,
         currentLocation: LatLng = uiState.value.currentLocation
     ) {
+        this.cameraPositionState = cameraPositionState
         Log.d("MapScreenViewModel", "animateToCurrentLocation: $currentLocation")
         val zoom = if(currentLocation == uiState.value.currentLocation) 15f else 10f
         cameraPositionState.animate(
@@ -261,12 +282,19 @@ class MapScreenViewModel @Inject constructor(
                 location?.let {
                     val currentLatLng = LatLng(it.latitude, it.longitude)
                     onMyLocationClick(currentLatLng)
+                } ?: run {
+                    // If location is null, check if GPS is enabled
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
+
+    companion object {
+        const val REQUEST_CHECK_SETTINGS = 100
+    }
+
 
     fun onPlaceSelected(placeName: String, navigateToMap: (String) -> Unit) {
         uiState.value = uiState.value.copy(destination = placeName)
@@ -281,5 +309,21 @@ class MapScreenViewModel @Inject constructor(
         val geocoder = Geocoder(context, Locale.getDefault())
         val addresses = geocoder.getFromLocation(lat, lan, 1)
         return addresses?.get(0)?.getAddressLine(0) ?: ""
+    }
+
+    fun updateTrip(tripId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            tripRepository.updateTrip(tripId)
+        }
+    }
+
+    fun resetUiState() {
+        uiState.value = uiState.value.copy(
+            destinationPoints = LatLng(0.0, 0.0),
+            destination = "Destination",
+            polyline = listOf(),
+            radius = 1000.0f,
+            isTracking = false,
+        )
     }
 }

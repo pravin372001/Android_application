@@ -19,4 +19,7 @@ interface TripDao {
     @Query("SELECT * FROM trip ORDER BY id DESC LIMIT 1")
     suspend fun getLastTrip(): Trip
 
+    @Query("UPDATE trip SET isTracking = 0 WHERE id = :tripId")
+    abstract fun updateTrip(tripId: Int)
+
 }

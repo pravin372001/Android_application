@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ZNews</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login">Google Sign-In</string>
+    <string name="client_id">231675895869-p7clfrecbu05a8h6j58bt0s1rb4jhfuv.apps.googleusercontent.com</string>
+    <string name="welcome_message">Welcome</string>
+</resources>

@@ -1,6 +1,8 @@
 package com.pravin.tripwake.screens.map
 
-import android.Manifest
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -35,27 +37,28 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
-import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -65,10 +68,12 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.pravin.tripwake.MainActivity
+import com.pravin.tripwake.R
 import com.pravin.tripwake.Screen
+import com.pravin.tripwake.model.service.workmanager.TripWorkManager
 import com.pravin.tripwake.ui.theme.TripWakeTheme
 import kotlinx.coroutines.launch
-import com.pravin.tripwake.R.string as AppText
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -84,19 +89,34 @@ fun MapScreen(
     val cameraPositionState = rememberCameraPositionState{
         position = CameraPosition.fromLatLngZoom(uiState.value.currentLocation, 15f)
     }
-
+    val context = LocalContext.current
+    val activity = context as MainActivity
     val coroutineScope = rememberCoroutineScope()
     Log.d("uiState", "MapScreen: ${uiState.value.destination}")
+    if(uiState.value.isTracking){
+        LaunchedEffect(Unit) {
+            activity.requestNotificationPermission {
+                Log.d("onCreateTrip", "MapScreen: before schedule")
+                scheduleLocationCheck(
+                    context,
+                    destinationLat = uiState.value.destinationPoints.latitude,
+                    destinationLon = uiState.value.destinationPoints.longitude,
+                    radius = uiState.value.radius)
+                Log.d("onCreateTrip", "MapScreen: after schedule")
+            }
+        }
+    }
     MapScreenContent(
         modifier = modifier,
         openAndPopUp = openAndPopUp,
         cameraPositionState = cameraPositionState,
         navigateToSearch = navigateToSearch,
         uiState = uiState.value,
-        onDestinationChange = { viewModel.onDestinationChange(it) },
         onRadiusChange = { viewModel.onRadiusChange(it) },
         onLocationClicked = { viewModel.fetchCurrentLocation() },
-        onCreateTrip = { viewModel.onCreateTripClicked(openAndPopUp = openAndPopUp) },
+        onCreateTrip = {
+            viewModel.onCreateTripClicked(openAndPopUp = openAndPopUp)
+                       },
         animateCurrentLocation = {
             coroutineScope.launch {
                 viewModel.animateToCurrentLocation(it)
@@ -116,7 +136,6 @@ fun MapScreenContent(
     cameraPositionState: CameraPositionState,
     navigateToSearch: (String) -> Unit,
     uiState: MapUiState,
-    onDestinationChange: (String) -> Unit,
     onRadiusChange: (Float) -> Unit,
     onLocationClicked: () -> Unit,
     onCreateTrip:() -> Unit,
@@ -163,13 +182,15 @@ fun MapScreenContent(
                     Marker(
                         position = currentLocation,
                         title = "My Location",
-                        snippet = "Current Location"
+                        snippet = "Current Location",
+                        icon = bitmapFromVector(LocalContext.current, R.drawable.placeholder),
                     )
                     if(uiState.destinationPoints != LatLng(0.0, 0.0)) {
                         Marker(
                             position = uiState.destinationPoints,
                             title = "Destination",
-                            snippet = "Destination"
+                            snippet = "Destination",
+                            icon = bitmapFromVector(LocalContext.current, R.drawable.destination)
                         )
                         Circle(
                             center = uiState.destinationPoints,
@@ -195,23 +216,26 @@ fun MapScreenContent(
                         FloatingActionButton(onClick = {
                             onLocationClicked()
                             animateCurrentLocation(cameraPositionState)
-                        }) {
+                        }
+                        ) {
                             Icon(imageVector = Icons.Filled.MyLocation, contentDescription = null)
                         }
                         Spacer(modifier = Modifier.height(8.dp))
-                        FloatingActionButton(onClick = {
-                            onCreateTrip()
-                        }) {
-                            Row(
-                                modifier = Modifier.padding(8.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Text(text = "Create Trip")
-                                Icon(
-                                    imageVector = Icons.Filled.DoneOutline,
-                                    contentDescription = null
-                                )
+                        if(!uiState.isTracking){
+                            FloatingActionButton(onClick = {
+                                onCreateTrip()
+                            }) {
+                                Row(
+                                    modifier = Modifier.padding(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text(text = "Create Trip")
+                                    Icon(
+                                        imageVector = Icons.Filled.DoneOutline,
+                                        contentDescription = null
+                                    )
+                                }
                             }
                         }
                     }
@@ -221,6 +245,47 @@ fun MapScreenContent(
     }
 }
 
+fun scheduleLocationCheck(context: Context, destinationLat: Double, destinationLon: Double, radius: Float) {
+    Log.d("scheduleLocationCheck", "scheduleLocationCheck: $destinationLat")
+    Log.d("scheduleLocationCheck", "scheduleLocationCheck: $destinationLon")
+    Log.d("scheduleLocationCheck", "scheduleLocationCheck: $radius")
+    val inputData = workDataOf(
+        "destination_lat" to destinationLat,
+        "destination_lon" to destinationLon,
+        "radius" to radius
+    )
+
+    val locationWorkRequest = OneTimeWorkRequestBuilder<TripWorkManager>()
+        .setInputData(inputData)
+        .build()
+
+    WorkManager.getInstance(context).enqueue(locationWorkRequest)
+}
+
+private fun bitmapFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
+    // below line is use to generate a drawable.
+    val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
+    // below line is use to set bounds to our vector drawable.
+    vectorDrawable!!.setBounds(0, 0, 96, 96)
+
+    // below line is use to create a bitmap for our drawable which we have added.
+    val bitmap = Bitmap.createBitmap(
+        96,
+        96,
+        Bitmap.Config.ARGB_8888
+    )
+    Log.d("bitmapFromVector", "bitmapFromVector: ${vectorDrawable.intrinsicWidth.toString()}")
+    Log.d("bitmapFromVector", "bitmapFromVector: ${vectorDrawable.intrinsicHeight.toString()}")
+
+    // below line is use to add bitmap in our canvas.
+    val canvas = Canvas(bitmap)
+
+    // below line is use to draw our vector drawable in canvas.
+    vectorDrawable.draw(canvas)
+
+    // after generating our bitmap we are returning our bitmap.
+    return BitmapDescriptorFactory.fromBitmap(bitmap)
+}
 
 @Composable
 fun CustomTopBar(
@@ -335,7 +400,8 @@ fun CustomTopBar(
                                 overflow = TextOverflow.Ellipsis,
                                 style = MaterialTheme.typography.bodyMedium
                             )
-                        }
+                        },
+                        enabled = !uiState.isTracking,
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
@@ -361,7 +427,7 @@ fun CustomTopBar(
                         onValueChange = {
                             onRadiusChange(it)
                         },
-                        enabled = uiState.destination.isNotEmpty() && uiState.destination != "Destination",
+                        enabled = !uiState.isTracking,
                         valueRange = 1000f..10000f
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -377,29 +443,6 @@ fun CustomTopBar(
     }
 }
 
-
-
-@Preview
-@Composable
-private fun CustomTopBarPreview() {
-    TripWakeTheme {
-        CustomTopBar(
-            onBackClick = {},
-            uiState = MapUiState(
-                destinationPoints = LatLng(0.0, 0.0),
-                destination = "Destination",
-                polyline = listOf(),
-                currentLocation = LatLng(0.0, 0.0),
-                radius = 0.0f,
-                isTracking = false,
-            ),
-            navigateToSearch = {},
-            onRadiusChange = {}
-        )
-    }
-}
-
-@OptIn(ExperimentalPermissionsApi::class)
 @Preview
 @Composable
 private fun MapScreenPreview() {
@@ -408,6 +451,7 @@ private fun MapScreenPreview() {
             openAndPopUp = { _, _ -> },
             navigateToSearch = {},
             uiState = MapUiState(
+                tripId = 0,
                 destinationPoints = LatLng(0.0, 0.0),
                 destination = "Destination",
                 polyline = listOf(),
@@ -416,7 +460,6 @@ private fun MapScreenPreview() {
                 isTracking = false,
             ),
             cameraPositionState = CameraPositionState(),
-            onDestinationChange = {},
             onRadiusChange = {},
             onLocationClicked = {},
             onCreateTrip = {},

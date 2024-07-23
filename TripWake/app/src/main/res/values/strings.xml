@@ -9,6 +9,8 @@
     <string name="cancel">Cancel</string>
     <string name="try_again">Try again</string>
     <string name="ok">OK</string>
+    <string name="trip_is_tracking">Trip is already tracking, Only one trip is allowed at a time</string>
+    <string name="trip_is_finished">Trip is finished, Please start a new trip</string>
 
     <!-- LoginScreen -->
     <string name="sign_in">Sign in</string>
