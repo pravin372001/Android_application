@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.DetailNewsFragment">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/detail_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/md_theme_primary"
+        app:title="@string/app_name"
+        app:titleTextColor="@color/md_theme_onPrimary"
+        app:navigationIcon="@drawable/baseline_arrow_back_ios_24"
+        app:navigationIconTint="@color/design_default_color_on_primary"
+        />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardBackgroundColor="@color/md_theme_background"
+        app:cardElevation="4dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- Top Image -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/top_image"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                app:shapeAppearance="@style/RoundedSquare"
+                tools:src="@tools:sample/avatars[0]"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <!-- Entertainment Badge -->
+
+            <!-- Date and Time -->
+
+            <!-- Headline -->
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/category_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginVertical="8dp"
+                android:padding="8dp"
+                android:text="@string/entertainment"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                app:chipBackgroundColor="@color/md_theme_primary"
+                app:layout_constraintBottom_toTopOf="@+id/headline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/top_image"
+                app:layout_constraintVertical_bias="0.261" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/date_time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="3rd April 2022  •  11:15 AM"
+                android:textColor="@color/md_theme_secondary"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@id/headline"
+                app:layout_constraintStart_toStartOf="@+id/category_badge"
+                app:layout_constraintTop_toBottomOf="@+id/category_badge" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/headline"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Will Smith resigns from the Academy"
+                android:textColor="@color/md_theme_onSecondaryContainer"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/date_time_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <!-- Author -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/author"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="By Brian Stelter, CNN Business"
+                android:textColor="@color/md_theme_secondary"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/headline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <!-- Article Content -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/article_content"
+                android:layout_width="349dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="After slapping presenter Chris Rock on stage at last weekend’s Academy Awards, Will Smith announced in a statement Friday that he has resigned from the Academy of Motion Pictures Arts  Sciences."
+                android:textColor="@color/md_theme_onSecondaryContainer"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/author" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+
+</LinearLayout>

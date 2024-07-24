@@ -2,8 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/my_nav"
-    app:startDestination="@id/loginFragment">
+    android:id="@+id/my_nav">
 
     <fragment
         android:id="@+id/newsListFragment"
@@ -13,6 +12,9 @@
         <action
             android:id="@+id/action_newsListFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_newsListFragment_to_detailNewsFragment"
+            app:destination="@id/detailNewsFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -23,4 +25,9 @@
             android:id="@+id/action_loginFragment_to_newsListFragment"
             app:destination="@id/newsListFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/detailNewsFragment"
+        android:name="com.example.znews.fragments.DetailNewsFragment"
+        android:label="fragment_detail_news"
+        tools:layout="@layout/fragment_detail_news" />
 </navigation>

@@ -4,4 +4,9 @@
     <string name="login">Google Sign-In</string>
     <string name="client_id">231675895869-p7clfrecbu05a8h6j58bt0s1rb4jhfuv.apps.googleusercontent.com</string>
     <string name="welcome_message">Welcome</string>
+    <string name="more">More</string>
+    <string name="sports">Sports</string>
+    <string name="common_signout_button_text">LogOut</string>
+    <string name="add_news">Add News</string>
+    <string name="entertainment">Entertainment</string>
 </resources>

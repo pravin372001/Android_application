@@ -9,7 +9,6 @@ import com.example.newswithweather.database.NewsModel
 
 class NewsRepository(context: Context) {
     private val newsDao :NewsDao
-
     init {
         val database =NewsDatabase.getDatabase(context)
         newsDao = database.newsDao()
