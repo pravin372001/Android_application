@@ -58,7 +58,8 @@ class NewsListFragment() : Fragment(), CategoryClickListener {
         when (item.itemId) {
             R.id.sign_out -> {
                 viewModel.logout()
-                findNavController().navigate(R.id.action_newsListFragment_to_loginFragment)
+                mainActivity.getBinding().slidingPaneLayout.visibility = View.GONE
+                mainActivity.getBinding().loginFragment.visibility = View.VISIBLE
                 return true
             }
         }
@@ -93,6 +94,11 @@ class NewsListFragment() : Fragment(), CategoryClickListener {
                 fetchNews(viewModel.getCategories()[viewModel.getSelectPosition()])
             }
         }
+        viewModel.isDbDataInsertedNewsOneLiveData.observe(viewLifecycleOwner) { isDbDataInserted ->
+            if (isDbDataInserted) {
+                viewModel.fetchNewsOneFromDb()
+            }
+        }
 
         return binding.root
     }
@@ -115,7 +121,7 @@ class NewsListFragment() : Fragment(), CategoryClickListener {
 
     private fun onNewsClick(news: NewsModel){
         viewModel.setCurrentNews(news)
-        findNavController().navigate(R.id.action_newsListFragment_to_detailNewsFragment)
+        mainActivity.getBinding().slidingPaneLayout.openPane()
     }
 
     override fun onCategoryPosition(position: Int) {

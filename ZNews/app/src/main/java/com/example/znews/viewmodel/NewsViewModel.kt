@@ -2,7 +2,6 @@ package com.example.znews.viewmodel
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.net.ConnectivityManager
 import android.util.Log
 import androidx.credentials.ClearCredentialStateRequest
@@ -13,11 +12,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.window.layout.FoldingFeature
 import com.example.newswithweather.model.news.Data
 import com.example.znews.R
 import com.example.znews.adapter.NewsAdapter
 import com.example.znews.database.NewsModel
+import com.example.znews.database.NewsOneModel
+import com.example.znews.model.newsone.Result
 import com.example.znews.remote.NewsApi
+import com.example.znews.remote.NewsOneApi
+import com.example.znews.repository.NewsOneRepository
 import com.example.znews.repository.NewsRepository
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -36,15 +40,21 @@ import kotlinx.coroutines.withContext
 class NewsViewModel(
     private val googleSignInClient: GoogleSignInClient,
     private val context: Context,
-    private val repository: NewsRepository
+    private val repository: NewsRepository,
+    private val newsOneRepository: NewsOneRepository
 ) : ViewModel() {
 
     private val auth = FirebaseAuth.getInstance()
     private val _user = MutableLiveData<FirebaseUser?>()
     val user: LiveData<FirebaseUser?> = _user
 
+    private val currentPage = MutableLiveData<Int>()
+
     private val isDbDataInserted = MutableLiveData<Boolean>()
     val isDbDataInsertedLiveData: LiveData<Boolean> = isDbDataInserted
+
+    private val isDbDataInsertedNewsOne = MutableLiveData<Boolean>()
+    val isDbDataInsertedNewsOneLiveData: LiveData<Boolean> = isDbDataInsertedNewsOne
 
     private var selectPosition = 0
 
@@ -54,11 +64,18 @@ class NewsViewModel(
     private val _newsListPage = MutableLiveData<List<NewsModel>>()
     val newsListPage: LiveData<List<NewsModel>> get() = _newsListPage
 
+    private val _newsOneListPage = MutableLiveData<List<NewsOneModel>>()
+    val newsOneListPage: LiveData<List<NewsOneModel>> get() = _newsOneListPage
+
+    private val _foldState = MutableLiveData<FoldingFeature?>()
+    val foldState: LiveData<FoldingFeature?> get() = _foldState
+
     init {
         auth.addAuthStateListener { auth ->
             _user.value = auth.currentUser
             Log.d(TAG, "Auth state changed: ${auth.currentUser?.uid}")
         }
+        fetchNewsOne()
         if(isNetworkOn()) {
             deleteNews()
             for (category in getCategories()) {
@@ -184,6 +201,73 @@ class NewsViewModel(
         }
     }
 
+    private fun fetchNewsOne() {
+        isDbDataInsertedNewsOne.value = false
+        viewModelScope.launch {
+            try {
+                val newsData = withContext(Dispatchers.IO) {
+                    NewsOneApi.retrofitService.getNews(API)
+                }
+                Log.i("NewsViewModel - fetchNewsOne", "$newsData")
+//                currentPage.value = newsData.totalResults
+//                fetchNewsOneByPage()
+                formatNewsOne(newsData.results)
+            } catch (e:Exception) {
+                Log.i("NewsViewModel - fetchNewsOne Error", e.message.toString())
+                Log.e(TAG, "fetchNewsOne: Exception", e.cause)
+            }
+        }
+    }
+
+    private fun fetchNewsOneByPage() {
+        for(i in 0..9) {
+            viewModelScope.launch {
+                try {
+                    val newsData = withContext(Dispatchers.IO) {
+                        NewsOneApi.retrofitService.getNewsByPageNumber(API, currentPage.value!!)
+                    }
+                    Log.i("NewsViewModel - fetchNewsOne", "$newsData")
+                    formatNewsOne(newsData.results)
+                } catch (e: Exception) {
+                    Log.i("NewsViewModel - Error", e.message.toString())
+                }
+            }
+        }
+    }
+
+    private fun formatNewsOne(results: List<Result>) {
+        val newsModels = results.map {
+            NewsOneModel(
+                title = it.title ?: "",
+                category = it.category?.firstOrNull() ?: "", // Ensure category is not null
+                content = it.content ?: "",
+                country = it.country?.toString() ?: "",
+                creator = it.creator?.firstOrNull() ?: "", // Ensure creator list is not null
+                description = it.description ?: "",
+                image_url = it.image_url ?: "",
+                pubDate = it.pubDate ?: "",
+                link = it.link ?: ""
+            )
+        }
+        viewModelScope.launch {
+            newsOneRepository.deleteAllNews()
+            newsOneRepository.insertNews(newsModels)
+            isDbDataInsertedNewsOne.value = true
+        }
+    }
+
+    fun fetchNewsOneFromDb() {
+        viewModelScope.launch {
+            val newsList = withContext(Dispatchers.IO) {
+                newsOneRepository.getAllNews()
+            }
+            newsList.observeForever {
+                _newsOneListPage.value = it
+            }
+        }
+        Log.d(TAG, "News list size: ${newsOneListPage.toString()}")
+    }
+
     fun fetchFromDb(category: String) {
         Log.d(TAG, "Category: $category")
         viewModelScope.launch {
@@ -212,6 +296,7 @@ class NewsViewModel(
     }
 
     companion object {
+        private const val API = "pub_493099aad351d0663cebc67551d7d81abba60"
         private const val TAG = "NewsViewModel"
         const val RC_SIGN_IN = 9001
     }
@@ -220,6 +305,11 @@ class NewsViewModel(
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo
         return networkInfo != null && networkInfo.isConnected
+    }
+
+    fun setFoldState(foldState: FoldingFeature?) {
+        _foldState.value = foldState
+        Log.d(TAG, "Fold state: $foldState")
     }
 }
 
@@ -232,7 +322,7 @@ class NewsViewModelFactory(private val context: Context) : ViewModelProvider.Fac
                 .build()
             val googleSignInClient = GoogleSignIn.getClient(context, gso)
             @Suppress("UNCHECKED_CAST")
-            return NewsViewModel(googleSignInClient, context, NewsRepository(context)) as T
+            return NewsViewModel(googleSignInClient, context, NewsRepository(context), NewsOneRepository(context)) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -1,18 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/nav_host"
-        android:name="androidx.navigation.fragment.NavHostFragment"
+    <androidx.slidingpanelayout.widget.SlidingPaneLayout
+        android:id="@+id/sliding_pane_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:defaultNavHost="true"
+        android:background="@color/md_theme_background"
+        android:visibility="gone"
+        >
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/list_view"
+            android:name="com.example.znews.fragments.NewsListFragment"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_news_list"
+            />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/detail_view"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:name="com.example.znews.fragments.DetailNewsFragment"
+            tools:layout="@layout/fragment_detail_news"
+            />
+
+    </androidx.slidingpanelayout.widget.SlidingPaneLayout>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/loginFragment"
+        android:name="com.example.znews.fragments.LoginFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_login"
+        android:visibility="visible"
         />
 
-</merge>
+</LinearLayout>

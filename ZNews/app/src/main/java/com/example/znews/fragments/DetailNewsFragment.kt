@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
@@ -27,9 +30,13 @@ class DetailNewsFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is MainActivity){
+        if (context is MainActivity) {
             mainActivity = context
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -50,7 +57,7 @@ class DetailNewsFragment : Fragment() {
             binding.articleContent.text = news.content
         }
         binding.detailToolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
+            mainActivity.getBinding().slidingPaneLayout.closePane()
         }
 
         return binding.root

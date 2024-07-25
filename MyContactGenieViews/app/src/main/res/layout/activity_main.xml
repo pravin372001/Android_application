@@ -32,11 +32,4 @@
             tools:layout="@layout/fragment_detail" />
 
     </androidx.slidingpanelayout.widget.SlidingPaneLayout>
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/detail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.pravin.mycontactgenieviews.DetailFragment"
-        android:visibility="gone"
-        tools:layout="@layout/fragment_detail" />
 </LinearLayout>

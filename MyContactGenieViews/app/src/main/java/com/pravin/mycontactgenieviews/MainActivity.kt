@@ -57,46 +57,41 @@ class MainActivity : AppCompatActivity() {
         viewModel.setFoldState(foldState)
         Log.d("MainFragment", "Fold state: $foldState")
 
-        if (foldState != null) {
-                when {
-                    foldState.isBookPosture() -> {
-                        binding.slidingPaneLayout.layoutParams.width = LayoutParams.MATCH_PARENT
-                        binding.listFragment.layoutParams.width = 900
-                        binding.detailFragment.layoutParams.width = 1300
-                        binding.detailFragment.requestLayout()
-                        binding.listFragment.requestLayout()
-                        Log.d("MainFragment", "Book posture detected")
-                    }
-                    foldState.isTableTopPosture() -> {
-                        binding.listFragment.layoutParams.width = LayoutParams.MATCH_PARENT
-                        binding.detailFragment.layoutParams.width = LayoutParams.MATCH_PARENT
-                        binding.detailFragment.requestLayout()
-                        binding.listFragment.requestLayout()
-                        Log.d("MainFragment", "Table top posture detected")
-                        // Handle tabletop posture layout changes
-                    }
-                    foldState.isFlatPostureVertical() -> {
-                        binding.listFragment.layoutParams.width = LayoutParams.MATCH_PARENT
-                        binding.detailFragment.layoutParams.width = LayoutParams.MATCH_PARENT
-                        binding.detailFragment.requestLayout()
-                        binding.listFragment.requestLayout()
-                        Log.d("MainFragment", "Flat posture vertical detected")
-                    }
-                    foldState.isFlatPostureHorizontal() -> {
-                        binding.listFragment.layoutParams.width = LayoutParams.MATCH_PARENT
-                        binding.detailFragment.layoutParams.width = LayoutParams.MATCH_PARENT
-                        binding.detailFragment.requestLayout()
-                        binding.listFragment.requestLayout()
-                        Log.d("MainFragment", "Flat posture horizontal detected")
-                    }
+        when {
+            foldState.isBookPosture() -> {
+                binding.slidingPaneLayout.layoutParams.width = LayoutParams.MATCH_PARENT
+                binding.listFragment.layoutParams.width = 900
+                binding.detailFragment.layoutParams.width = 1300
+                binding.detailFragment.requestLayout()
+                binding.listFragment.requestLayout()
+                Log.d("MainFragment", "Book posture detected")
+            }
+            foldState.isTableTopPosture() -> {
+                binding.listFragment.layoutParams.width = LayoutParams.MATCH_PARENT
+                binding.detailFragment.layoutParams.width = LayoutParams.MATCH_PARENT
+                binding.detailFragment.requestLayout()
+                binding.listFragment.requestLayout()
+                Log.d("MainFragment", "Table top posture detected")
+                // Handle tabletop posture layout changes
+            }
+            foldState.isFlatPostureVertical() -> {
+                binding.listFragment.layoutParams.width = LayoutParams.MATCH_PARENT
+                binding.detailFragment.layoutParams.width = LayoutParams.MATCH_PARENT
+                binding.detailFragment.requestLayout()
+                binding.listFragment.requestLayout()
+                Log.d("MainFragment", "Flat posture vertical detected")
+            }
+            foldState.isFlatPostureHorizontal() -> {
+                binding.listFragment.layoutParams.width = LayoutParams.MATCH_PARENT
+                binding.detailFragment.layoutParams.width = LayoutParams.MATCH_PARENT
+                binding.detailFragment.requestLayout()
+                binding.listFragment.requestLayout()
+                Log.d("MainFragment", "Flat posture horizontal detected")
+            }
 
-                    else -> {
-                        Log.d("MainFragment", "Unknown posture detected")
-                    }
-                }
-
-        } else {
-            Log.d("MainFragment", "Fold state is null")
+            else -> {
+                Log.d("MainFragment", "Unknown posture detected")
+            }
         }
     }
 

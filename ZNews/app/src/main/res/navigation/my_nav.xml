@@ -8,23 +8,12 @@
         android:id="@+id/newsListFragment"
         android:name="com.example.znews.fragments.NewsListFragment"
         android:label="fragment_news_list"
-        tools:layout="@layout/fragment_news_list" >
-        <action
-            android:id="@+id/action_newsListFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-        <action
-            android:id="@+id/action_newsListFragment_to_detailNewsFragment"
-            app:destination="@id/detailNewsFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_news_list" />
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.znews.fragments.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/action_loginFragment_to_newsListFragment"
-            app:destination="@id/newsListFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/detailNewsFragment"
         android:name="com.example.znews.fragments.DetailNewsFragment"
