@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class NewsOneModel (
     @PrimaryKey(autoGenerate = true)
     var newsId: Int = 0,
+    val articleId: String,
     val title: String,
     val category: String,
     val content: String,

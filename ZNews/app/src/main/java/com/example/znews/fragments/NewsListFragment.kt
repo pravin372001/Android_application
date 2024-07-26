@@ -20,12 +20,13 @@ import com.example.znews.R
 import com.example.znews.adapter.CategoryAdapter
 import com.example.znews.adapter.NewsAdapter
 import com.example.znews.database.NewsModel
+import com.example.znews.database.NewsOneModel
 import com.example.znews.databinding.FragmentNewsListBinding
 import com.example.znews.listeners.CategoryClickListener
 import com.example.znews.viewmodel.NewsViewModel
 import com.example.znews.viewmodel.NewsViewModelFactory
 
-class NewsListFragment() : Fragment(), CategoryClickListener {
+class NewsListFragment() : Fragment() {
 
     private val viewModel: NewsViewModel by activityViewModels {
         NewsViewModelFactory(requireContext())
@@ -82,52 +83,84 @@ class NewsListFragment() : Fragment(), CategoryClickListener {
             setHasFixedSize(true)
         }
 
-        categoryAdapter = CategoryAdapter(viewModel.getCategories(), this, viewModel.getSelectPosition())
-        binding.categoryList.apply {
-            adapter = categoryAdapter
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            setHasFixedSize(true)
-        }
+        viewModel.uiState.observe(viewLifecycleOwner){ uiState ->
+            when(uiState) {
+                is NewsViewModel.NewsUIState.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+                is NewsViewModel.NewsUIState.Success -> {
+                    binding.progressBar.visibility = View.GONE
+                }
+                is NewsViewModel.NewsUIState.Error -> {
+                    binding.fab.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
+                    binding.retryText.visibility = View.VISIBLE
+                    binding.retryButton.visibility = View.VISIBLE
+                } else -> {
 
-        viewModel.isDbDataInsertedLiveData.observe(viewLifecycleOwner) { isDbDataInserted ->
-            if (isDbDataInserted) {
-                fetchNews(viewModel.getCategories()[viewModel.getSelectPosition()])
+            }
             }
         }
+        binding.retryButton.setOnClickListener {
+            viewModel.fetchNewsOne()
+        }
+//        categoryAdapter = CategoryAdapter(viewModel.getCategories(), this, viewModel.getSelectPosition())
+//        binding.categoryList.apply {
+//            adapter = categoryAdapter
+//            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+//            setHasFixedSize(true)
+//        }
+
+//        viewModel.isDbDataInsertedLiveData.observe(viewLifecycleOwner) { isDbDataInserted ->
+//            if (isDbDataInserted) {
+//                fetchNews(viewModel.getCategories()[viewModel.getSelectPosition()])
+//            }
+//        }
         viewModel.isDbDataInsertedNewsOneLiveData.observe(viewLifecycleOwner) { isDbDataInserted ->
             if (isDbDataInserted) {
-                viewModel.fetchNewsOneFromDb()
+                fetchNews()
             }
         }
-
+        binding.fab.setOnClickListener {
+            mainActivity.getBinding().slidingPaneLayout.visibility = View.GONE
+            mainActivity.getBinding().addNewsButton.visibility = View.VISIBLE
+        }
         return binding.root
     }
 
-    override fun onCategoryClicked(category: String) {
-        viewModel.fetchFromDb(category)
-        viewModel.newsListPage.observe(viewLifecycleOwner) { newsList ->
-            newsAdapter = NewsAdapter(newsList, onNewsClick = {onNewsClick(it)})
+//    override fun onCategoryClicked(category: String) {
+//        viewModel.fetchFromDb(category)
+//        viewModel.newsListPage.observe(viewLifecycleOwner) { newsList ->
+//            newsAdapter = NewsAdapter(newsList, onNewsClick = {onNewsClick(it)})
+//            binding.newsList.adapter = newsAdapter
+//        }
+//    }
+
+    private fun fetchNews(){
+//        viewModel.fetchFromDb(category)
+//        viewModel.newsListPage.observe(viewLifecycleOwner) { newsList ->
+//            newsAdapter = NewsAdapter(newsList, onNewsClick = {onNewsClick(it)})
+//            binding.newsList.adapter = newsAdapter
+//        }
+        viewModel.fetchNewsOneFromDb()
+        viewModel.newsOneListPage.observe(viewLifecycleOwner) { newsOneList ->
+            for(news in newsOneList){
+                Log.d(TAG, "News imageUrl: ${news.image_url.toString()}")
+            }
+            newsAdapter = NewsAdapter(newsOneList = newsOneList, onNewsClick = {onNewsClick(it)})
             binding.newsList.adapter = newsAdapter
         }
     }
 
-    private fun fetchNews(category: String){
-        viewModel.fetchFromDb(category)
-        viewModel.newsListPage.observe(viewLifecycleOwner) { newsList ->
-            newsAdapter = NewsAdapter(newsList, onNewsClick = {onNewsClick(it)})
-            binding.newsList.adapter = newsAdapter
-        }
-    }
-
-    private fun onNewsClick(news: NewsModel){
+    private fun onNewsClick(news: NewsOneModel){
         viewModel.setCurrentNews(news)
         mainActivity.getBinding().slidingPaneLayout.openPane()
     }
 
-    override fun onCategoryPosition(position: Int) {
-        Log.d(TAG, "Category position: $position")
-        viewModel.selectPosition(position)
-    }
+//    override fun onCategoryPosition(position: Int) {
+//        Log.d(TAG, "Category position: $position")
+//        viewModel.selectPosition(position)
+//    }
 
     companion object {
         private const val TAG = "NewsListFragment"

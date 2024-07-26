@@ -1,6 +1,7 @@
 package com.example.znews.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.znews.database.NewOneDao
 import com.example.znews.database.NewsDatabase
@@ -19,6 +20,7 @@ class NewsOneRepository(
     suspend fun insertNews(newsList: List<NewsOneModel>) {
         for (news in newsList) {
             newsOneDao.insertNews(news)
+            Log.d("NewsOneRepository", "Inserted news: ${news.articleId}")
         }
     }
 

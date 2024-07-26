@@ -44,4 +44,11 @@
         android:visibility="visible"
         />
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/addNewsButton"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.example.znews.fragments.AddNewsFragment"
+        android:visibility="gone"
+        />
 </LinearLayout>

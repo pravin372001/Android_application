@@ -1,6 +1,7 @@
 package com.example.znews.fragments
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -35,10 +36,6 @@ class DetailNewsFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,12 +46,22 @@ class DetailNewsFragment : Fragment() {
         mainActivity.setSupportActionBar(toolbar)
         viewModel.currentNews.observe(viewLifecycleOwner) { news ->
             Log.d("DetailNewsFragment", "News: $news")
-            Picasso.get().load(news.imageUrl).into(binding.topImage)
+            if (news.image_url.isEmpty()) {
+                binding.topImage.setImageResource(R.drawable.znews)
+            } else {
+                if(news.image_url.contains("content://")){
+                    val imageUri = Uri.parse(news.image_url)
+                    Log.d("DetailNewsFragment", "Image URI: $imageUri")
+                    Picasso.get().load(imageUri).error(R.drawable.znews).into(binding.topImage)
+                } else {
+                    Picasso.get().load(news.image_url).error(R.drawable.znews).into(binding.topImage)
+                }
+            }
             binding.categoryBadge.text = news.category
-            binding.dateTimeText.text = "${news.date}  •  ${news.time}"
+            binding.dateTimeText.text = news.pubDate
             binding.headline.text = news.title
-            binding.author.text = news.author
-            binding.articleContent.text = news.content
+            binding.author.text = if(news.creator.isNotEmpty()) "Author: ${news.creator}" else  "Author: Unknown"
+            binding.articleContent.text = news.description.ifEmpty { news.title }
         }
         binding.detailToolbar.setNavigationOnClickListener {
             mainActivity.getBinding().slidingPaneLayout.closePane()
