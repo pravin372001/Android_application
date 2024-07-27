@@ -99,7 +99,8 @@ class AddNewsFragment : Fragment() {
                 binding.newsImage.tag == null ||
                 binding.menuAutoCompleteTextView.text.toString().isEmpty()
             ) {
-                Snackbar.make(binding.root, "Please fill all fields", Snackbar.LENGTH_SHORT).show()
+                mainActivity.getString(com.example.znews.R.string.fill_all_fields)
+                    .let { it1 -> Snackbar.make(binding.root, it1, Snackbar.LENGTH_SHORT).show() }
             } else {
                 addNewsAndNavigate()
             }

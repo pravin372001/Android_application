@@ -50,7 +50,7 @@ class NewsListFragment() : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is MainActivity){
+        if (context is MainActivity) {
             mainActivity = context
         }
     }
@@ -60,6 +60,7 @@ class NewsListFragment() : Fragment() {
             R.id.sign_out -> {
                 viewModel.logout()
                 mainActivity.getBinding().slidingPaneLayout.visibility = View.GONE
+                mainActivity.getBinding().slidingPaneLayout.closePane()
                 mainActivity.getBinding().loginFragment.visibility = View.VISIBLE
                 return true
             }
@@ -98,7 +99,7 @@ class NewsListFragment() : Fragment() {
                     binding.retryButton.visibility = View.VISIBLE
                 } else -> {
 
-            }
+                }
             }
         }
         binding.retryButton.setOnClickListener {

@@ -22,6 +22,7 @@ class NewsRepository(context: Context) {
         for (news in newsList) {
             val existingNews = newsDao.getNewsByDateTime(news.date, news.time)
             if (existingNews == null || existingNews.title != news.title) {
+                Log.d("NewsRepository", "Inserting new news: $existingNews")
                 newsDao.insertNews(news)
             }
         }

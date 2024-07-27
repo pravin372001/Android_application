@@ -28,6 +28,10 @@ class NewsOneRepository(
         return newsOneDao.getAllNews()
     }
 
+    fun getAllNewsList(): List<NewsOneModel> {
+        return newsOneDao.getAllNewsList()
+    }
+
     suspend fun deleteAllNews() {
         newsOneDao.resetTable()
         newsOneDao.deleteAllNews()

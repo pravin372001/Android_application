@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/md_theme_primary"
-        app:title="Add News"
+        app:title="@string/add_news"
         app:titleTextColor="@color/md_theme_onPrimary"
         app:navigationIcon="@drawable/baseline_arrow_back_ios_24"
         app:navigationIconTint="@color/md_theme_onPrimary" />
@@ -26,14 +26,13 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:placeholderText="Title">
+            android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/newsTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Title"
+                android:hint="@string/title"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -59,30 +58,28 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:placeholderText="Content">
+            android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/newsContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Content"
                 android:inputType="textMultiLine"
+                android:hint="@string/content"
                 android:minLines="3"
                 android:maxLines="6" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:placeholderText="Description">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/newsDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Description"
                 android:inputType="textMultiLine"
+                android:hint="@string/description"
                 android:minLines="3"
                 android:maxLines="6" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -102,7 +99,7 @@
             android:id="@+id/addNewsButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add News" />
+            android:text="@string/add_news" />
 
     </LinearLayout>
 

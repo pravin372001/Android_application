@@ -71,7 +71,7 @@ class NewsViewModel(
     private var _currentNews = MutableLiveData<NewsOneModel>()
     val currentNews: LiveData<NewsOneModel> = _currentNews
 
-    private lateinit var databaseNewsList : LiveData<List<NewsOneModel>>
+    private lateinit var databaseNewsList : List<NewsOneModel>
 
     private val _newsListPage = MutableLiveData<List<NewsModel>>()
     val newsListPage: LiveData<List<NewsModel>> get() = _newsListPage
@@ -87,7 +87,9 @@ class NewsViewModel(
             _user.value = auth.currentUser
             Log.d(TAG, "Auth state changed: ${auth.currentUser?.uid}")
         }
-        databaseNewsList = newsOneRepository.getAllNews()
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseNewsList = newsOneRepository.getAllNewsList()
+        }
         fetchNewsOne()
 //        if(isNetworkOn()) {
 //            deleteNews()
@@ -220,7 +222,8 @@ class NewsViewModel(
             try {
                 _uiState.value = NewsUIState.Loading
                 val newsData = withContext(Dispatchers.IO) {
-                    NewsOneApi.retrofitService.getNews(API)
+                    val lan = context.getString(R.string.api)
+                    NewsOneApi.retrofitService.getNews(API, lan)
                 }
                 Log.i("NewsViewModel - fetchNewsOne", "$newsData")
                 formatNewsOne(newsData.results)
@@ -235,9 +238,9 @@ class NewsViewModel(
     fun setCustomNewsOne(newsOne: NewsOneModel) {
         var articleExists = false
         viewModelScope.launch {
-            // Observe the database list
-            databaseNewsList.observeForever { newsList ->
-                articleExists = newsList.any { it.articleId == newsOne.articleId }
+            Log.d(TAG, "Database news list: ${databaseNewsList.toString()}")
+            articleExists = databaseNewsList.any {
+                it.articleId == newsOne.articleId
             }
 
             if (!articleExists) {
@@ -263,15 +266,16 @@ class NewsViewModel(
             )
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             // Fetch all news data from the database
-            val existingNewsList = newsOneRepository.getAllNews()
+            val existingNewsList = newsOneRepository.getAllNewsList()
 
+            Log.d(TAG, "existingNewsList: ${existingNewsList.toString()}")
             // Create a set to track existing article IDs
-            val existingArticleIds = existingNewsList.value?.map { it.articleId }?.toSet()
+            val existingArticleIds = existingNewsList.map { it.articleId }.toSet()
 
             // Filter out newsModels that already exist in the database
-            val uniqueNewsModels = newsModels.filter { it.articleId !in existingArticleIds.orEmpty() }
+            val uniqueNewsModels = newsModels.filter { it.articleId !in existingArticleIds }
 
             Log.d(TAG, "uniqueNewsModels: ${uniqueNewsModels.toString()}")
             Log.d(TAG, "existingArticleIds: ${existingArticleIds.toString()}")
@@ -279,9 +283,9 @@ class NewsViewModel(
             // Insert only the unique news articles into the database
             if (uniqueNewsModels.isNotEmpty()) {
                 newsOneRepository.insertNews(uniqueNewsModels)
-                isDbDataInsertedNewsOne.value = true
+                isDbDataInsertedNewsOne.postValue(true)
             } else {
-                isDbDataInsertedNewsOne.value = true
+                isDbDataInsertedNewsOne.postValue(true)
             }
         }
     }
@@ -318,15 +322,15 @@ class NewsViewModel(
         return auth.currentUser != null
     }
 
-    fun deleteNews() {
-        viewModelScope.launch {
-            repository.deleteAllNews()
-        }
-    }
+//    fun deleteNews() {
+//        viewModelScope.launch {
+//            repository.deleteAllNews()
+//        }
+//    }
 
-    fun setDbDataInserted(value: Boolean) {
-        isDbDataInserted.value = value
-    }
+//    fun setDbDataInserted(value: Boolean) {
+//        isDbDataInserted.value = value
+//    }
 
     companion object {
         private const val API = "pub_493099aad351d0663cebc67551d7d81abba60"

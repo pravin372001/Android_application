@@ -14,6 +14,9 @@ interface NewOneDao {
     @Query("SELECT * FROM newsone_table")
     fun getAllNews(): LiveData<List<NewsOneModel>>
 
+    @Query("SELECT * FROM newsone_table")
+    fun getAllNewsList(): List<NewsOneModel>
+
     @Query("DELETE FROM newsone_table")
     suspend fun deleteAllNews()
 
@@ -22,6 +25,5 @@ interface NewOneDao {
 
     @Query("SELECT * FROM newsone_table WHERE category = :category")
     fun getNewsByCategory(category: String): LiveData<List<NewsOneModel>>
-
 
 }

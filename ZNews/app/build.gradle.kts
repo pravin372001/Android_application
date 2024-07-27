@@ -29,12 +29,28 @@ android {
             )
         }
     }
+
+    flavorDimensions.add("lang")
+
+    productFlavors {
+        create("english") {
+            dimension = "lang"
+            applicationIdSuffix = ".en"
+            versionNameSuffix = "-en"
+        }
+        create("tamil") {
+            dimension = "lang"
+            applicationIdSuffix = ".ta"
+            versionNameSuffix = "-ta"
+        }
+    }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "1.8"
     }
 
     buildFeatures {
@@ -91,6 +107,5 @@ dependencies {
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
-    implementation("com.github.bumptech.glide:glide:4.11.0")
 
 }

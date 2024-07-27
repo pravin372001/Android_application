@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="api">ta</string>
+    <string name="readmoreButton"></string>
+    <string name="app_name">ஜி-நியூஸ் தமிழ்</string>
+    <string name="welcome_message">வரவேற்கிறோம்</string>
+    <string name="more">மேலும்</string>
+    <string name="sports">மூலம்</string>
+    <string name="common_signout_button_text">வெளியேறு</string>
+    <string name="add_news">கோப்பை சேர்க்கவும்</string>
+    <string name="entertainment">சமூக விளையாட்டுகள்</string>
+    <string name="label">பகுதி</string>
+    <string name="head_title">சிறந்த தலைப்புகள் செய்தி</string>
+    <string name="retry">மீண்டும் முயற்சிக்கவும்</string>
+    <string name="title">தலைப்பு</string>
+    <string name="content">உள்ளடக்கம்</string>
+    <string name="description">விளக்கம்</string>
+    <string name="fill_all_fields">எல்லா புலங்களையும் நிரப்பவும்</string>
+    <string name="read_more">மேலும் படிக்கவும்</string>
+    <string name="no_link">இணைப்பு கிடைக்கவில்லை</string>
+
+    <string-array name="categories">
+        <item>வங்கீடு</item>
+        <item>குற்றம்</item>
+        <item>பாலினபாதகம்</item>
+        <item>படிப்பில்</item>
+        <item>சமூக விளையாட்டுகள்</item>
+        <item>புகழ்</item>
+        <item>உணவு</item>
+        <item>ஆரோக்கியம்</item>
+        <item>செயல்பாடுகள்</item>
+        <item>மற்றும்</item>
+        <item>அறிவியல்</item>
+        <item>தொழில்நுட்பம்</item>
+        <item>மூலம்</item>
+        <item>சிறப்பு</item>
+        <item>உலகம்</item>
+    </string-array>
+
+</resources>

@@ -1,6 +1,7 @@
 package com.example.znews.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +20,7 @@ import com.example.znews.R
 import com.example.znews.databinding.FragmentDetailNewsBinding
 import com.example.znews.viewmodel.NewsViewModel
 import com.example.znews.viewmodel.NewsViewModelFactory
+import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 
 class DetailNewsFragment : Fragment() {
@@ -62,6 +64,17 @@ class DetailNewsFragment : Fragment() {
             binding.headline.text = news.title
             binding.author.text = if(news.creator.isNotEmpty()) "Author: ${news.creator}" else  "Author: Unknown"
             binding.articleContent.text = news.description.ifEmpty { news.title }
+            binding.readmoreButton.setOnClickListener {
+                if(news.link.isEmpty()){
+                    mainActivity.getString(R.string.no_link).let { it1 ->
+                        Snackbar.make(binding.root,
+                            it1, Snackbar.LENGTH_SHORT).show()
+                    }
+                } else {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(news.link))
+                    startActivity(intent)
+                }
+            }
         }
         binding.detailToolbar.setNavigationOnClickListener {
             mainActivity.getBinding().slidingPaneLayout.closePane()

@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">ZNews</string>
+    <string name="api">en</string>
+    <string name="app_name">ZNews English</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="login">Google Sign-In</string>
     <string name="client_id">231675895869-p7clfrecbu05a8h6j58bt0s1rb4jhfuv.apps.googleusercontent.com</string>
@@ -9,9 +10,15 @@
     <string name="common_signout_button_text">LogOut</string>
     <string name="add_news">Add News</string>
     <string name="entertainment">Entertainment</string>
-    <string name="label">category</string>
+    <string name="label">Category</string>
     <string name="head_title">Top HeadLines</string>
     <string name="retry">Retry</string>
+    <string name="title">Title</string>
+    <string name="content">Content</string>
+    <string name="description">Description</string>
+    <string name="fill_all_fields">Please fill all fields</string>
+    <string name="read_more">Read More</string>
+    <string name="no_link">Link Not available</string>
     <string-array name="categories">
         <item>Business</item>
         <item>Crime</item>
