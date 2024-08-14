@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Gugan</string>
+    <string name="image_master">ImageMaster</string>
+    <string name="image_editor">ImageEditor</string>
+    <string name="upload_image">Upload Image</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+</resources>
